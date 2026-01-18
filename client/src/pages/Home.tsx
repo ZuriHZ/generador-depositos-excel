@@ -3,7 +3,7 @@ import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import DepositForm from '@/components/DepositForm';
 import DepositTable from '@/components/DepositTable';
-import { useDeposits, DepositFormData, ValidationErrors } from '@/hooks/useDeposits';
+import { useDepositsWithDB, DepositFormData, ValidationErrors } from '@/hooks/useDepositsWithDB';
 import { toast } from 'sonner';
 import { DollarSign, LogOut } from 'lucide-react';
 import { getLoginUrl } from '@/const';
@@ -19,8 +19,7 @@ import { getLoginUrl } from '@/const';
  */
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
-  const { deposits, addDeposit, removeDeposit, clearAllDeposits, editDeposit } = useDeposits();
-  const [isLoading, setIsLoading] = useState(false);
+  const { deposits, addDeposit, removeDeposit, clearAllDeposits, editDeposit, isLoading } = useDepositsWithDB();
 
   if (!isAuthenticated) {
     return (
@@ -45,51 +44,45 @@ export default function Home() {
     );
   }
 
-  const handleAddDeposit = (data: DepositFormData) => {
-    setIsLoading(true);
+  const handleAddDeposit = async (data: DepositFormData) => {
+    const result = await addDeposit(data);
     
-    // Simular pequeño delay para feedback visual
-    setTimeout(() => {
-      const result = addDeposit(data);
-      
-      if (result.success) {
-        toast.success('Depósito agregado exitosamente');
-      } else if (result.errors) {
-        // Mostrar primer error
-        const firstError = Object.values(result.errors)[0];
-        if (firstError) {
-          toast.error(firstError);
-        }
+    if (result.success) {
+      toast.success('Depósito agregado exitosamente');
+    } else if (result.errors) {
+      const firstError = Object.values(result.errors)[0];
+      if (firstError) {
+        toast.error(firstError);
       }
-      
-      setIsLoading(false);
-    }, 300);
+    }
   };
 
-  const handleRemoveDeposit = (id: string) => {
-    removeDeposit(id);
+  const handleRemoveDeposit = async (id: number) => {
+    await removeDeposit(id);
     toast.success('Depósito eliminado');
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     if (deposits.length === 0) {
       toast.info('No hay depósitos para limpiar');
       return;
     }
     
     if (window.confirm('¿Estás seguro de que deseas eliminar todos los depósitos?')) {
-      clearAllDeposits();
+      await clearAllDeposits();
       toast.success('Todos los depósitos han sido eliminados');
     }
   };
 
-  const handleEditDeposit = (id: string, data: DepositFormData) => {
-    const result = editDeposit(id, data);
+  const handleEditDeposit = async (id: number, data: DepositFormData) => {
+    const result = await editDeposit(id, data);
     if (!result.success && result.errors) {
       const firstError = Object.values(result.errors)[0];
       if (firstError) {
         toast.error(firstError);
       }
+    } else {
+      toast.success('Depósito actualizado exitosamente');
     }
   };
 

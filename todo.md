@@ -16,10 +16,8 @@
 - [x] Procedimientos tRPC para CRUD de depósitos
 - [x] Persistencia de depósitos por usuario en base de datos
 - [x] Recuperación de depósitos guardados al iniciar sesión
-- [x] Sistema de autenticación OAuth con Manus
-- [x] Campos Remito y Número de Bolsa reemplazando Observación
-- [x] Base de datos MySQL con tabla de depósitos
-- [x] Procedimientos tRPC para CRUD de depósitos
+- [x] Hook useDepositsWithDB para sincronización con base de datos
+- [x] Sincronización automática de depósitos al agregar/editar/eliminar
 
 ## Mejoras Futuras (Opcional)
 

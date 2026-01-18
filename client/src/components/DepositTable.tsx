@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Deposit, DepositFormData } from '@/hooks/useDeposits';
+import { Deposit, DepositFormData } from '@/hooks/useDepositsWithDB';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Trash2, FileDown, Edit2 } from 'lucide-react';
@@ -10,9 +10,9 @@ import DeleteConfirmDialog from '@/components/DeleteConfirmDialog';
 
 interface DepositTableProps {
   deposits: Deposit[];
-  onRemove: (id: string) => void;
+  onRemove: (id: number) => void;
   onClearAll: () => void;
-  onEdit: (id: string, data: DepositFormData) => void;
+  onEdit: (id: number, data: DepositFormData) => void;
 }
 
 const formatCurrency = (amount: number) => {

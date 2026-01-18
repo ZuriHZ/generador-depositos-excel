@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { Deposit } from '@/hooks/useDeposits';
+import { Deposit } from '@/hooks/useDepositsWithDB';
 
 export const exportDepositsToExcel = (deposits: Deposit[], filename: string = 'depositos.xlsx') => {
   if (deposits.length === 0) {

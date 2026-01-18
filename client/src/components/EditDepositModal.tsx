@@ -19,7 +19,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { AlertCircle } from 'lucide-react';
-import { Deposit, DepositFormData, ValidationErrors } from '@/hooks/useDeposits';
+import { Deposit, DepositFormData, ValidationErrors } from '@/hooks/useDepositsWithDB';
 
 interface EditDepositModalProps {
   isOpen: boolean;
