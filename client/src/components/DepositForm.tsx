@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Card } from '@/components/ui/card';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { DepositFormData, ValidationErrors } from '@/hooks/useDeposits';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { DepositFormData, ValidationErrors } from "@/hooks/useDeposits";
 
 interface DepositFormProps {
   onSubmit: (data: DepositFormData) => void;
@@ -20,22 +20,25 @@ interface DepositFormProps {
 }
 
 const DEPOSIT_TYPES = [
-  { value: 'efectivo', label: 'Efectivo' },
-  { value: 'cheque', label: 'Cheque' },
-  { value: 'transferencia', label: 'Transferencia' },
-  { value: 'deposito-automatico', label: 'Depósito Automático' },
-  { value: 'otro', label: 'Otro' },
+  { value: "efectivo", label: "Efectivo" },
+  { value: "cheque", label: "Cheque" },
+  { value: "transferencia", label: "Transferencia" },
+  { value: "deposito-automatico", label: "Depósito Automático" },
+  { value: "otro", label: "Otro" },
 ];
 
-export default function DepositForm({ onSubmit, isLoading = false }: DepositFormProps) {
+export default function DepositForm({
+  onSubmit,
+  isLoading = false,
+}: DepositFormProps) {
   const [formData, setFormData] = useState<DepositFormData>({
-    fecha: new Date().toISOString().split('T')[0],
-    numeroCuenta: '',
-    nombreCliente: '',
-    monto: '',
-    tipoDeposito: '',
-    remito: '',
-    numeroBolsa: '',
+    fecha: new Date().toISOString().split("T")[0],
+    numeroCuenta: "",
+    nombreCliente: "",
+    monto: "",
+    tipoDeposito: "",
+    remito: "",
+    numeroBolsa: "",
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -45,22 +48,22 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     // Limpiar error cuando el usuario empieza a escribir
     if (errors[name as keyof ValidationErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+      setErrors(prev => ({ ...prev, [name]: undefined }));
     }
   };
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, tipoDeposito: value }));
+    setFormData(prev => ({ ...prev, tipoDeposito: value }));
     if (errors.tipoDeposito) {
-      setErrors((prev) => ({ ...prev, tipoDeposito: undefined }));
+      setErrors(prev => ({ ...prev, tipoDeposito: undefined }));
     }
   };
 
   const handleBlur = (field: string) => {
-    setTouched((prev) => ({ ...prev, [field]: true }));
+    setTouched(prev => ({ ...prev, [field]: true }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -69,13 +72,13 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
     // Limpiar formulario después de envío exitoso
     setTimeout(() => {
       setFormData({
-        fecha: new Date().toISOString().split('T')[0],
-        numeroCuenta: '',
-        nombreCliente: '',
-        monto: '',
-        tipoDeposito: '',
-        remito: '',
-        numeroBolsa: '',
+        fecha: new Date().toISOString().split("T")[0],
+        numeroCuenta: "",
+        nombreCliente: "",
+        monto: "",
+        tipoDeposito: "",
+        remito: "",
+        numeroBolsa: "",
       });
       setTouched({});
     }, 100);
@@ -87,7 +90,10 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
 
   return (
     <Card className="p-6 bg-white border border-border shadow-sm">
-      <h2 className="text-xl font-bold text-foreground mb-6" style={{ fontFamily: 'var(--font-poppins)' }}>
+      <h2
+        className="text-xl font-bold text-foreground mb-6"
+        style={{ fontFamily: "var(--font-poppins)" }}
+      >
         Nuevo Depósito
       </h2>
 
@@ -103,7 +109,7 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
             type="date"
             value={formData.fecha}
             onChange={handleInputChange}
-            onBlur={() => handleBlur('fecha')}
+            onBlur={() => handleBlur("fecha")}
             className="w-full h-10 text-sm"
             disabled={isLoading}
           />
@@ -117,7 +123,10 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
 
         {/* Número de Cuenta */}
         <div>
-          <Label htmlFor="numeroCuenta" className="text-sm text-foreground mb-2 block">
+          <Label
+            htmlFor="numeroCuenta"
+            className="text-sm text-foreground mb-2 block"
+          >
             Número de Cuenta <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -127,7 +136,7 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
             placeholder="Ej: 123456789"
             value={formData.numeroCuenta}
             onChange={handleInputChange}
-            onBlur={() => handleBlur('numeroCuenta')}
+            onBlur={() => handleBlur("numeroCuenta")}
             className="w-full h-10 text-sm"
             disabled={isLoading}
           />
@@ -141,7 +150,10 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
 
         {/* Nombre del Cliente */}
         <div>
-          <Label htmlFor="nombreCliente" className="text-sm text-foreground mb-2 block">
+          <Label
+            htmlFor="nombreCliente"
+            className="text-sm text-foreground mb-2 block"
+          >
             Nombre del Cliente <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -151,7 +163,7 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
             placeholder="Ej: Juan Pérez"
             value={formData.nombreCliente}
             onChange={handleInputChange}
-            onBlur={() => handleBlur('nombreCliente')}
+            onBlur={() => handleBlur("nombreCliente")}
             className="w-full h-10 text-sm"
             disabled={isLoading}
           />
@@ -177,7 +189,7 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
             min="0"
             value={formData.monto}
             onChange={handleInputChange}
-            onBlur={() => handleBlur('monto')}
+            onBlur={() => handleBlur("monto")}
             className="w-full h-10 text-sm"
             disabled={isLoading}
           />
@@ -191,15 +203,21 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
 
         {/* Tipo de Depósito */}
         <div>
-          <Label htmlFor="tipoDeposito" className="text-sm text-foreground mb-2 block">
+          <Label
+            htmlFor="tipoDeposito"
+            className="text-sm text-foreground mb-2 block"
+          >
             Tipo de Depósito <span className="text-destructive">*</span>
           </Label>
-          <Select value={formData.tipoDeposito} onValueChange={handleSelectChange}>
+          <Select
+            value={formData.tipoDeposito}
+            onValueChange={handleSelectChange}
+          >
             <SelectTrigger className="w-full h-10 text-sm">
               <SelectValue placeholder="Selecciona un tipo" />
             </SelectTrigger>
             <SelectContent>
-              {DEPOSIT_TYPES.map((type) => (
+              {DEPOSIT_TYPES.map(type => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}
                 </SelectItem>
@@ -216,15 +234,18 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
 
         {/* Remito */}
         <div>
-          <Label htmlFor="remito" className="text-sm text-foreground mb-2 block">
-            Remito (Opcional)
+          <Label
+            htmlFor="remito"
+            className="text-sm text-foreground mb-2 block"
+          >
+            Remito
           </Label>
           <Input
             id="remito"
             name="remito"
             type="text"
             placeholder="Número de remito"
-            value={formData.remito || ''}
+            value={formData.remito || ""}
             onChange={handleInputChange}
             className="w-full text-sm"
             disabled={isLoading}
@@ -233,15 +254,18 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
 
         {/* Número de Bolsa */}
         <div>
-          <Label htmlFor="numeroBolsa" className="text-sm text-foreground mb-2 block">
-            Número de Bolsa (Opcional)
+          <Label
+            htmlFor="numeroBolsa"
+            className="text-sm text-foreground mb-2 block"
+          >
+            Número de Bolsa
           </Label>
           <Input
             id="numeroBolsa"
             name="numeroBolsa"
             type="text"
             placeholder="Número de bolsa"
-            value={formData.numeroBolsa || ''}
+            value={formData.numeroBolsa || ""}
             onChange={handleInputChange}
             className="w-full text-sm"
             disabled={isLoading}
@@ -252,10 +276,10 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
         <Button
           type="submit"
           className="w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all duration-200"
-          style={{ fontFamily: 'var(--font-poppins)' }}
+          style={{ fontFamily: "var(--font-poppins)" }}
           disabled={isLoading}
         >
-          {isLoading ? 'Agregando...' : 'Agregar Depósito'}
+          {isLoading ? "Agregando..." : "Agregar Depósito"}
         </Button>
       </form>
     </Card>
