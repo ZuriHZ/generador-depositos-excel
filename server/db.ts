@@ -1,7 +1,16 @@
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, deposits, InsertDepositInput, Deposit } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import { drizzle } from "drizzle-orm/node-postgres";
+import pg from "pg";
+import {
+  InsertUser,
+  users,
+  deposits,
+  InsertDepositInput,
+  Deposit,
+} from "../drizzle/schema";
+import { ENV } from "./_core/env";
+
+const { Pool } = pg;
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -9,7 +18,13 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.DATABASE_URL?.includes("localhost")
+          ? false
+          : { rejectUnauthorized: false },
+      });
+      _db = drizzle(pool);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -56,8 +71,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.role = user.role;
       updateSet.role = user.role;
     } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
+      values.role = "admin";
+      updateSet.role = "admin";
     }
 
     if (!values.lastSignedIn) {
@@ -68,7 +83,9 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
+    // PostgreSQL specific On Conflict Update
+    await db.insert(users).values(values).onConflictDoUpdate({
+      target: users.openId,
       set: updateSet,
     });
   } catch (error) {
@@ -84,24 +101,44 @@ export async function getUserByOpenId(openId: string) {
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, openId))
+    .limit(1);
 
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function createDeposit(userId: number, data: InsertDepositInput): Promise<Deposit> {
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createDeposit(
+  userId: number,
+  data: InsertDepositInput
+): Promise<Deposit> {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  await db.insert(deposits).values({
-    ...data,
-    userId,
-  });
+  const [inserted] = await db
+    .insert(deposits)
+    .values({
+      ...data,
+      userId,
+    })
+    .returning();
 
-  const allDeposits = await db.select().from(deposits).where(eq(deposits.userId, userId));
-  return allDeposits[allDeposits.length - 1]!;
+  return inserted;
 }
 
 export async function getDepositsByUserId(userId: number): Promise<Deposit[]> {
@@ -113,16 +150,26 @@ export async function getDepositsByUserId(userId: number): Promise<Deposit[]> {
   return await db.select().from(deposits).where(eq(deposits.userId, userId));
 }
 
-export async function updateDeposit(depositId: number, data: Partial<InsertDepositInput>): Promise<Deposit> {
+export async function updateDeposit(
+  depositId: number,
+  data: Partial<InsertDepositInput>
+): Promise<Deposit> {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");
   }
 
-  await db.update(deposits).set(data).where(eq(deposits.id, depositId));
+  // PostgreSQL allows returning directly
+  const [updated] = await db
+    .update(deposits)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(deposits.id, depositId))
+    .returning();
 
-  const updated = await db.select().from(deposits).where(eq(deposits.id, depositId)).limit(1);
-  return updated[0]!;
+  if (!updated) {
+    throw new Error("Deposit not found");
+  }
+  return updated;
 }
 
 export async function deleteDeposit(depositId: number): Promise<void> {

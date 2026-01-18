@@ -1,1 +1,0 @@
-ALTER TABLE `deposits` MODIFY COLUMN `userId` int;
