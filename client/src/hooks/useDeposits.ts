@@ -109,10 +109,36 @@ export const useDeposits = () => {
     setDeposits([]);
   }, []);
 
+  const editDeposit = useCallback((id: string, data: DepositFormData): { success: boolean; errors?: ValidationErrors } => {
+    const errors = validateForm(data);
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, errors };
+    }
+
+    setDeposits((prev) =>
+      prev.map((deposit) =>
+        deposit.id === id
+          ? {
+              ...deposit,
+              fecha: data.fecha,
+              numeroCuenta: data.numeroCuenta.trim(),
+              nombreCliente: data.nombreCliente.trim(),
+              monto: parseFloat(data.monto),
+              tipoDeposito: data.tipoDeposito,
+              observacion: data.observacion.trim(),
+            }
+          : deposit
+      )
+    );
+    return { success: true };
+  }, []);
+
   return {
     deposits,
     addDeposit,
     removeDeposit,
     clearAllDeposits,
+    editDeposit,
   };
 };

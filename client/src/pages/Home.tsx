@@ -15,7 +15,7 @@ import { DollarSign } from 'lucide-react';
  * - Transiciones suaves de 200ms
  */
 export default function Home() {
-  const { deposits, addDeposit, removeDeposit, clearAllDeposits } = useDeposits();
+  const { deposits, addDeposit, removeDeposit, clearAllDeposits, editDeposit } = useDeposits();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddDeposit = (data: DepositFormData) => {
@@ -56,6 +56,16 @@ export default function Home() {
     }
   };
 
+  const handleEditDeposit = (id: string, data: DepositFormData) => {
+    const result = editDeposit(id, data);
+    if (!result.success && result.errors) {
+      const firstError = Object.values(result.errors)[0];
+      if (firstError) {
+        toast.error(firstError);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Encabezado */}
@@ -87,11 +97,12 @@ export default function Home() {
 
           {/* Columna derecha: Tabla (60%) */}
           <div className="lg:col-span-3">
-            <DepositTable
-              deposits={deposits}
-              onRemove={handleRemoveDeposit}
-              onClearAll={handleClearAll}
-            />
+          <DepositTable
+            deposits={deposits}
+            onRemove={handleRemoveDeposit}
+            onClearAll={handleClearAll}
+            onEdit={handleEditDeposit}
+          />
           </div>
         </div>
       </main>

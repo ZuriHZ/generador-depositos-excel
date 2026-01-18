@@ -1,14 +1,18 @@
-import { Deposit } from '@/hooks/useDeposits';
+import { useState } from 'react';
+import { Deposit, DepositFormData } from '@/hooks/useDeposits';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Trash2, FileDown } from 'lucide-react';
+import { Trash2, FileDown, Edit2 } from 'lucide-react';
 import { exportDepositsToExcel } from '@/lib/excelExporter';
 import { toast } from 'sonner';
+import EditDepositModal from '@/components/EditDepositModal';
+import DeleteConfirmDialog from '@/components/DeleteConfirmDialog';
 
 interface DepositTableProps {
   deposits: Deposit[];
   onRemove: (id: string) => void;
   onClearAll: () => void;
+  onEdit: (id: string, data: DepositFormData) => void;
 }
 
 const formatCurrency = (amount: number) => {
@@ -42,7 +46,13 @@ export default function DepositTable({
   deposits,
   onRemove,
   onClearAll,
+  onEdit,
 }: DepositTableProps) {
+  const [editingDeposit, setEditingDeposit] = useState<Deposit | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
+  const [deletingDeposit, setDeletingDeposit] = useState<Deposit | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const handleExport = () => {
     try {
       const filename = `depositos-${new Date().toISOString().split('T')[0]}.xlsx`;
@@ -52,6 +62,36 @@ export default function DepositTable({
       toast.error(
         error instanceof Error ? error.message : 'Error al exportar a Excel'
       );
+    }
+  };
+
+  const handleEditClick = (deposit: Deposit) => {
+    setEditingDeposit(deposit);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSave = (data: DepositFormData) => {
+    if (!editingDeposit) return;
+    setIsEditLoading(true);
+    setTimeout(() => {
+      onEdit(editingDeposit.id, data);
+      setIsEditLoading(false);
+      setIsEditModalOpen(false);
+      setEditingDeposit(null);
+      toast.success('Depósito actualizado exitosamente');
+    }, 300);
+  };
+
+  const handleDeleteClick = (deposit: Deposit) => {
+    setDeletingDeposit(deposit);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deletingDeposit) {
+      onRemove(deletingDeposit.id);
+      setIsDeleteConfirmOpen(false);
+      setDeletingDeposit(null);
     }
   };
 
@@ -153,13 +193,22 @@ export default function DepositTable({
                         {deposit.observacion || '—'}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() => onRemove(deposit.id)}
-                          className="inline-flex items-center justify-center p-2 text-destructive hover:bg-destructive/10 rounded transition-colors"
-                          title="Eliminar depósito"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center justify-center gap-1">
+                          <button
+                            onClick={() => handleEditClick(deposit)}
+                            className="inline-flex items-center justify-center p-2 text-primary hover:bg-primary/10 rounded transition-colors"
+                            title="Editar depósito"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(deposit)}
+                            className="inline-flex items-center justify-center p-2 text-destructive hover:bg-destructive/10 rounded transition-colors"
+                            title="Eliminar depósito"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -189,6 +238,29 @@ export default function DepositTable({
           </div>
         </>
       )}
+
+      {/* Modal de edición */}
+      <EditDepositModal
+        isOpen={isEditModalOpen}
+        deposit={editingDeposit}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingDeposit(null);
+        }}
+        onSave={handleEditSave}
+        isLoading={isEditLoading}
+      />
+
+      {/* Diálogo de confirmación de eliminación */}
+      <DeleteConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => {
+          setIsDeleteConfirmOpen(false);
+          setDeletingDeposit(null);
+        }}
+        depositInfo={deletingDeposit ? `${deletingDeposit.nombreCliente} (${deletingDeposit.numeroCuenta})` : undefined}
+      />
     </div>
   );
 }
