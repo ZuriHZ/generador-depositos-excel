@@ -13,7 +13,8 @@ export const exportDepositsToExcel = (deposits: Deposit[], filename: string = 'd
     'Nombre del Cliente': deposit.nombreCliente,
     Monto: deposit.monto,
     'Tipo de Depósito': deposit.tipoDeposito,
-    Observación: deposit.observacion || '',
+    Remito: deposit.remito || '',
+    'Número de Bolsa': deposit.numeroBolsa || '',
   }));
 
   // Crear libro de trabajo
@@ -26,7 +27,8 @@ export const exportDepositsToExcel = (deposits: Deposit[], filename: string = 'd
     { wch: 25 }, // Nombre del Cliente
     { wch: 15 }, // Monto
     { wch: 18 }, // Tipo de Depósito
-    { wch: 30 }, // Observación
+    { wch: 15 }, // Remito
+    { wch: 18 }, // Número de Bolsa
   ];
   worksheet['!cols'] = columnWidths;
 

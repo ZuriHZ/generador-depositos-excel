@@ -34,7 +34,8 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
     nombreCliente: '',
     monto: '',
     tipoDeposito: '',
-    observacion: '',
+    remito: '',
+    numeroBolsa: '',
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -73,7 +74,8 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
         nombreCliente: '',
         monto: '',
         tipoDeposito: '',
-        observacion: '',
+        remito: '',
+        numeroBolsa: '',
       });
       setTouched({});
     }, 100);
@@ -212,18 +214,36 @@ export default function DepositForm({ onSubmit, isLoading = false }: DepositForm
           )}
         </div>
 
-        {/* Observación */}
+        {/* Remito */}
         <div>
-          <Label htmlFor="observacion" className="text-sm text-foreground mb-2 block">
-            Observación (Opcional)
+          <Label htmlFor="remito" className="text-sm text-foreground mb-2 block">
+            Remito (Opcional)
           </Label>
-          <Textarea
-            id="observacion"
-            name="observacion"
-            placeholder="Notas adicionales..."
-            value={formData.observacion}
+          <Input
+            id="remito"
+            name="remito"
+            type="text"
+            placeholder="Número de remito"
+            value={formData.remito || ''}
             onChange={handleInputChange}
-            className="w-full text-sm min-h-20 resize-none"
+            className="w-full text-sm"
+            disabled={isLoading}
+          />
+        </div>
+
+        {/* Número de Bolsa */}
+        <div>
+          <Label htmlFor="numeroBolsa" className="text-sm text-foreground mb-2 block">
+            Número de Bolsa (Opcional)
+          </Label>
+          <Input
+            id="numeroBolsa"
+            name="numeroBolsa"
+            type="text"
+            placeholder="Número de bolsa"
+            value={formData.numeroBolsa || ''}
+            onChange={handleInputChange}
+            className="w-full text-sm"
             disabled={isLoading}
           />
         </div>

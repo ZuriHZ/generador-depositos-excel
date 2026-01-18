@@ -50,7 +50,8 @@ export default function EditDepositModal({
     nombreCliente: '',
     monto: '',
     tipoDeposito: '',
-    observacion: '',
+    remito: '',
+    numeroBolsa: '',
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -63,7 +64,8 @@ export default function EditDepositModal({
         nombreCliente: deposit.nombreCliente,
         monto: deposit.monto.toString(),
         tipoDeposito: deposit.tipoDeposito,
-        observacion: deposit.observacion,
+        remito: deposit.remito || '',
+        numeroBolsa: deposit.numeroBolsa || '',
       });
       setErrors({});
     }
@@ -227,16 +229,33 @@ export default function EditDepositModal({
 
           {/* Observación */}
           <div>
-            <Label htmlFor="edit-observacion" className="text-sm text-foreground mb-2 block">
-              Observación (Opcional)
+            <Label htmlFor="edit-remito" className="text-sm text-foreground mb-2 block">
+              Remito (Opcional)
             </Label>
-            <Textarea
-              id="edit-observacion"
-              name="observacion"
-              placeholder="Notas adicionales..."
-              value={formData.observacion}
+            <Input
+              id="edit-remito"
+              name="remito"
+              type="text"
+              placeholder="Número de remito"
+              value={formData.remito || ''}
               onChange={handleInputChange}
-              className="w-full text-sm min-h-16 resize-none"
+              className="w-full text-sm"
+              disabled={isLoading}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="edit-numeroBolsa" className="text-sm text-foreground mb-2 block">
+              Número de Bolsa (Opcional)
+            </Label>
+            <Input
+              id="edit-numeroBolsa"
+              name="numeroBolsa"
+              type="text"
+              placeholder="Número de bolsa"
+              value={formData.numeroBolsa || ''}
+              onChange={handleInputChange}
+              className="w-full text-sm"
               disabled={isLoading}
             />
           </div>

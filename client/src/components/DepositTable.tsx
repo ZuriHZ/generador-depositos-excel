@@ -157,7 +157,10 @@ export default function DepositTable({
                       Tipo
                     </th>
                     <th className="px-4 py-3 text-left font-bold" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      Observación
+                      Remito
+                    </th>
+                    <th className="px-4 py-3 text-left font-bold" style={{ fontFamily: 'var(--font-poppins)' }}>
+                      Número de Bolsa
                     </th>
                     <th className="px-4 py-3 text-center font-bold" style={{ fontFamily: 'var(--font-poppins)' }}>
                       Acción
@@ -190,7 +193,10 @@ export default function DepositTable({
                         </span>
                       </td>
                       <td className="px-4 py-3 text-foreground text-xs max-w-xs truncate">
-                        {deposit.observacion || '—'}
+                        {deposit.remito || '—'}
+                      </td>
+                      <td className="px-4 py-3 text-foreground text-xs max-w-xs truncate">
+                        {deposit.numeroBolsa || '—'}
                       </td>
                       <td className="px-4 py-3 text-center">
                         <div className="flex items-center justify-center gap-1">

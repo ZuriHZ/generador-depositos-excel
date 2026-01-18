@@ -7,7 +7,8 @@ export interface Deposit {
   nombreCliente: string;
   monto: number;
   tipoDeposito: string;
-  observacion: string;
+  remito?: string;
+  numeroBolsa?: string;
 }
 
 export interface DepositFormData {
@@ -16,7 +17,8 @@ export interface DepositFormData {
   nombreCliente: string;
   monto: string;
   tipoDeposito: string;
-  observacion: string;
+  remito?: string;
+  numeroBolsa?: string;
 }
 
 export interface ValidationErrors {
@@ -94,7 +96,8 @@ export const useDeposits = () => {
       nombreCliente: data.nombreCliente.trim(),
       monto: parseFloat(data.monto),
       tipoDeposito: data.tipoDeposito,
-      observacion: data.observacion.trim(),
+      remito: data.remito?.trim(),
+      numeroBolsa: data.numeroBolsa?.trim(),
     };
 
     setDeposits((prev) => [...prev, newDeposit]);
@@ -126,7 +129,8 @@ export const useDeposits = () => {
               nombreCliente: data.nombreCliente.trim(),
               monto: parseFloat(data.monto),
               tipoDeposito: data.tipoDeposito,
-              observacion: data.observacion.trim(),
+              remito: data.remito?.trim(),
+              numeroBolsa: data.numeroBolsa?.trim(),
             }
           : deposit
       )

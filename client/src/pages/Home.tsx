@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/_core/hooks/useAuth';
+import { trpc } from '@/lib/trpc';
 import DepositForm from '@/components/DepositForm';
 import DepositTable from '@/components/DepositTable';
 import { useDeposits, DepositFormData, ValidationErrors } from '@/hooks/useDeposits';
 import { toast } from 'sonner';
-import { DollarSign } from 'lucide-react';
+import { DollarSign, LogOut } from 'lucide-react';
+import { getLoginUrl } from '@/const';
 
 /**
  * Página principal del Generador de Excel para Depósitos Bancarios
@@ -15,8 +18,32 @@ import { DollarSign } from 'lucide-react';
  * - Transiciones suaves de 200ms
  */
 export default function Home() {
+  const { user, isAuthenticated, logout } = useAuth();
   const { deposits, addDeposit, removeDeposit, clearAllDeposits, editDeposit } = useDeposits();
   const [isLoading, setIsLoading] = useState(false);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-lg bg-primary flex items-center justify-center mx-auto mb-6">
+            <DollarSign className="w-10 h-10 text-primary-foreground" />
+          </div>
+          <h1 className="text-3xl font-bold text-foreground mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+            Generador de Depósitos
+          </h1>
+          <p className="text-muted-foreground mb-8">Inicia sesión para continuar</p>
+          <a
+            href={getLoginUrl()}
+            className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            style={{ fontFamily: 'var(--font-poppins)' }}
+          >
+            Iniciar Sesión
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   const handleAddDeposit = (data: DepositFormData) => {
     setIsLoading(true);
@@ -71,17 +98,29 @@ export default function Home() {
       {/* Encabezado */}
       <header className="bg-white border-b border-border shadow-sm sticky top-0 z-50">
         <div className="container max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-primary-foreground" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  Generador de Depósitos
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Crea y exporta depósitos bancarios a Excel
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'var(--font-poppins)' }}>
-                Generador de Depósitos
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Crea y exporta depósitos bancarios a Excel
-              </p>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">{user?.name || user?.email}</span>
+              <button
+                onClick={logout}
+                className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Salir
+              </button>
             </div>
           </div>
         </div>
