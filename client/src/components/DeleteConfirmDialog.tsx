@@ -6,7 +6,7 @@ import {
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
 interface DeleteConfirmDialogProps {
   isOpen: boolean;
@@ -22,16 +22,16 @@ export default function DeleteConfirmDialog({
   depositInfo,
 }: DeleteConfirmDialogProps) {
   return (
-    <AlertDialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
+    <AlertDialog open={isOpen} onOpenChange={open => !open && onCancel()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle style={{ fontFamily: 'var(--font-poppins)' }}>
+          <AlertDialogTitle style={{ fontFamily: "var(--font-poppins)" }}>
             ¿Eliminar depósito?
           </AlertDialogTitle>
           <AlertDialogDescription>
             {depositInfo
               ? `Estás a punto de eliminar el depósito de ${depositInfo}. Esta acción no se puede deshacer.`
-              : 'Esta acción no se puede deshacer.'}
+              : "Esta acción no se puede deshacer."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex gap-3 justify-end">

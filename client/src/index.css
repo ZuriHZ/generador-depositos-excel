@@ -44,45 +44,45 @@
 
 :root {
   /* Paleta corporativa minimalista */
-  --primary: #0066CC;
-  --primary-foreground: #FFFFFF;
-  --sidebar-primary: #0052A3;
-  --sidebar-primary-foreground: #FFFFFF;
-  --chart-1: #0066CC;
-  --chart-2: #0052A3;
-  --chart-3: #003D7A;
+  --primary: #0066cc;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #0052a3;
+  --sidebar-primary-foreground: #ffffff;
+  --chart-1: #0066cc;
+  --chart-2: #0052a3;
+  --chart-3: #003d7a;
   --chart-4: #002851;
   --chart-5: #001428;
   --radius: 0.5rem;
-  --background: #FFFFFF;
-  --foreground: #1F2937;
-  --card: #FFFFFF;
-  --card-foreground: #1F2937;
-  --popover: #FFFFFF;
-  --popover-foreground: #1F2937;
-  --secondary: #F3F4F6;
+  --background: #ffffff;
+  --foreground: #1f2937;
+  --card: #ffffff;
+  --card-foreground: #1f2937;
+  --popover: #ffffff;
+  --popover-foreground: #1f2937;
+  --secondary: #f3f4f6;
   --secondary-foreground: #374151;
-  --muted: #E5E7EB;
-  --muted-foreground: #6B7280;
-  --accent: #0066CC;
-  --accent-foreground: #FFFFFF;
-  --destructive: #EF4444;
-  --destructive-foreground: #FFFFFF;
-  --border: #E5E7EB;
-  --input: #F9FAFB;
-  --ring: #0066CC;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1F2937;
-  --sidebar-accent: #0066CC;
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #E5E7EB;
-  --sidebar-ring: #0066CC;
+  --muted: #e5e7eb;
+  --muted-foreground: #6b7280;
+  --accent: #0066cc;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #f9fafb;
+  --ring: #0066cc;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2937;
+  --sidebar-accent: #0066cc;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #0066cc;
 }
 
 /* Tipografía corporativa */
 :root {
-  --font-poppins: 'Poppins', sans-serif;
-  --font-inter: 'Inter', sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
 
 /* Tema oscuro deshabilitado para esta aplicación - se utiliza tema claro corporativo */
@@ -95,10 +95,16 @@
     @apply bg-background text-foreground;
     font-family: var(--font-inter);
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-poppins);
   }
-  label, .label {
+  label,
+  .label {
     font-family: var(--font-poppins);
     @apply font-medium;
   }

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -17,9 +17,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { AlertCircle } from 'lucide-react';
-import { Deposit, DepositFormData, ValidationErrors } from '@/hooks/useDepositsWithDB';
+} from "@/components/ui/dialog";
+import { AlertCircle } from "lucide-react";
+import {
+  Deposit,
+  DepositFormData,
+  ValidationErrors,
+} from "@/hooks/useDepositsWithDB";
 
 interface EditDepositModalProps {
   isOpen: boolean;
@@ -30,11 +34,11 @@ interface EditDepositModalProps {
 }
 
 const DEPOSIT_TYPES = [
-  { value: 'efectivo', label: 'Efectivo' },
-  { value: 'cheque', label: 'Cheque' },
-  { value: 'transferencia', label: 'Transferencia' },
-  { value: 'deposito-automatico', label: 'Depósito Automático' },
-  { value: 'otro', label: 'Otro' },
+  { value: "efectivo", label: "Efectivo" },
+  { value: "cheque", label: "Cheque" },
+  { value: "transferencia", label: "Transferencia" },
+  { value: "deposito-automatico", label: "Depósito Automático" },
+  { value: "otro", label: "Otro" },
 ];
 
 export default function EditDepositModal({
@@ -45,13 +49,13 @@ export default function EditDepositModal({
   isLoading = false,
 }: EditDepositModalProps) {
   const [formData, setFormData] = useState<DepositFormData>({
-    fecha: '',
-    numeroCuenta: '',
-    nombreCliente: '',
-    monto: '',
-    tipoDeposito: '',
-    remito: '',
-    numeroBolsa: '',
+    fecha: "",
+    numeroCuenta: "",
+    nombreCliente: "",
+    monto: "",
+    tipoDeposito: "",
+    remito: "",
+    numeroBolsa: "",
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -64,8 +68,8 @@ export default function EditDepositModal({
         nombreCliente: deposit.nombreCliente,
         monto: deposit.monto.toString(),
         tipoDeposito: deposit.tipoDeposito,
-        remito: deposit.remito || '',
-        numeroBolsa: deposit.numeroBolsa || '',
+        remito: deposit.remito || "",
+        numeroBolsa: deposit.numeroBolsa || "",
       });
       setErrors({});
     }
@@ -75,16 +79,16 @@ export default function EditDepositModal({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name as keyof ValidationErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+      setErrors(prev => ({ ...prev, [name]: undefined }));
     }
   };
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, tipoDeposito: value }));
+    setFormData(prev => ({ ...prev, tipoDeposito: value }));
     if (errors.tipoDeposito) {
-      setErrors((prev) => ({ ...prev, tipoDeposito: undefined }));
+      setErrors(prev => ({ ...prev, tipoDeposito: undefined }));
     }
   };
 
@@ -103,7 +107,7 @@ export default function EditDepositModal({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle style={{ fontFamily: 'var(--font-poppins)' }}>
+          <DialogTitle style={{ fontFamily: "var(--font-poppins)" }}>
             Editar Depósito
           </DialogTitle>
           <DialogDescription>
@@ -114,7 +118,10 @@ export default function EditDepositModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Fecha */}
           <div>
-            <Label htmlFor="edit-fecha" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-fecha"
+              className="text-sm text-foreground mb-2 block"
+            >
               Fecha <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -136,7 +143,10 @@ export default function EditDepositModal({
 
           {/* Número de Cuenta */}
           <div>
-            <Label htmlFor="edit-numeroCuenta" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-numeroCuenta"
+              className="text-sm text-foreground mb-2 block"
+            >
               Número de Cuenta <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -158,7 +168,10 @@ export default function EditDepositModal({
 
           {/* Nombre del Cliente */}
           <div>
-            <Label htmlFor="edit-nombreCliente" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-nombreCliente"
+              className="text-sm text-foreground mb-2 block"
+            >
               Nombre del Cliente <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -180,7 +193,10 @@ export default function EditDepositModal({
 
           {/* Monto */}
           <div>
-            <Label htmlFor="edit-monto" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-monto"
+              className="text-sm text-foreground mb-2 block"
+            >
               Monto <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -204,15 +220,21 @@ export default function EditDepositModal({
 
           {/* Tipo de Depósito */}
           <div>
-            <Label htmlFor="edit-tipoDeposito" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-tipoDeposito"
+              className="text-sm text-foreground mb-2 block"
+            >
               Tipo de Depósito <span className="text-destructive">*</span>
             </Label>
-            <Select value={formData.tipoDeposito} onValueChange={handleSelectChange}>
+            <Select
+              value={formData.tipoDeposito}
+              onValueChange={handleSelectChange}
+            >
               <SelectTrigger className="w-full h-10 text-sm">
                 <SelectValue placeholder="Selecciona un tipo" />
               </SelectTrigger>
               <SelectContent>
-                {DEPOSIT_TYPES.map((type) => (
+                {DEPOSIT_TYPES.map(type => (
                   <SelectItem key={type.value} value={type.value}>
                     {type.label}
                   </SelectItem>
@@ -229,7 +251,10 @@ export default function EditDepositModal({
 
           {/* Observación */}
           <div>
-            <Label htmlFor="edit-remito" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-remito"
+              className="text-sm text-foreground mb-2 block"
+            >
               Remito (Opcional)
             </Label>
             <Input
@@ -237,7 +262,7 @@ export default function EditDepositModal({
               name="remito"
               type="text"
               placeholder="Número de remito"
-              value={formData.remito || ''}
+              value={formData.remito || ""}
               onChange={handleInputChange}
               className="w-full text-sm"
               disabled={isLoading}
@@ -245,7 +270,10 @@ export default function EditDepositModal({
           </div>
 
           <div>
-            <Label htmlFor="edit-numeroBolsa" className="text-sm text-foreground mb-2 block">
+            <Label
+              htmlFor="edit-numeroBolsa"
+              className="text-sm text-foreground mb-2 block"
+            >
               Número de Bolsa (Opcional)
             </Label>
             <Input
@@ -253,7 +281,7 @@ export default function EditDepositModal({
               name="numeroBolsa"
               type="text"
               placeholder="Número de bolsa"
-              value={formData.numeroBolsa || ''}
+              value={formData.numeroBolsa || ""}
               onChange={handleInputChange}
               className="w-full text-sm"
               disabled={isLoading}
@@ -275,10 +303,10 @@ export default function EditDepositModal({
             type="button"
             onClick={handleSubmit}
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            style={{ fontFamily: 'var(--font-poppins)' }}
+            style={{ fontFamily: "var(--font-poppins)" }}
             disabled={isLoading}
           >
-            {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+            {isLoading ? "Guardando..." : "Guardar Cambios"}
           </Button>
         </DialogFooter>
       </DialogContent>

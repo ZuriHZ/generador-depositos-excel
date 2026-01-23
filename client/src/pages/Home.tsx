@@ -1,16 +1,20 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/_core/hooks/useAuth';
-import { trpc } from '@/lib/trpc';
-import DepositForm from '@/components/DepositForm';
-import DepositTable from '@/components/DepositTable';
-import { useDepositsWithDB, DepositFormData, ValidationErrors } from '@/hooks/useDepositsWithDB';
-import { toast } from 'sonner';
-import { DollarSign, LogOut } from 'lucide-react';
-import { getLoginUrl } from '@/const';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
+import DepositForm from "@/components/DepositForm";
+import DepositTable from "@/components/DepositTable";
+import {
+  useDepositsWithDB,
+  DepositFormData,
+  ValidationErrors,
+} from "@/hooks/useDepositsWithDB";
+import { toast } from "sonner";
+import { DollarSign, LogOut } from "lucide-react";
+import { getLoginUrl } from "@/const";
 
 /**
  * Página principal del Generador de Excel para Depósitos Bancarios
- * 
+ *
  * Diseño: Corporativo Minimalista
  * - Layout de dos columnas: formulario (40%) | tabla (60%)
  * - Paleta: Grises corporativos + Azul profesional (#0066CC)
@@ -19,7 +23,14 @@ import { getLoginUrl } from '@/const';
  */
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
-  const { deposits, addDeposit, removeDeposit, clearAllDeposits, editDeposit, isLoading } = useDepositsWithDB();
+  const {
+    deposits,
+    addDeposit,
+    removeDeposit,
+    clearAllDeposits,
+    editDeposit,
+    isLoading,
+  } = useDepositsWithDB();
 
   if (!isAuthenticated) {
     return (
@@ -28,14 +39,19 @@ export default function Home() {
           <div className="w-16 h-16 rounded-lg bg-primary flex items-center justify-center mx-auto mb-6">
             <DollarSign className="w-10 h-10 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+          <h1
+            className="text-3xl font-bold text-foreground mb-2"
+            style={{ fontFamily: "var(--font-poppins)" }}
+          >
             Generador de Depósitos
           </h1>
-          <p className="text-muted-foreground mb-8">Inicia sesión para continuar</p>
+          <p className="text-muted-foreground mb-8">
+            Inicia sesión para continuar
+          </p>
           <a
             href={getLoginUrl()}
             className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-            style={{ fontFamily: 'var(--font-poppins)' }}
+            style={{ fontFamily: "var(--font-poppins)" }}
           >
             Iniciar Sesión
           </a>
@@ -46,9 +62,9 @@ export default function Home() {
 
   const handleAddDeposit = async (data: DepositFormData) => {
     const result = await addDeposit(data);
-    
+
     if (result.success) {
-      toast.success('Depósito agregado exitosamente');
+      toast.success("Depósito agregado exitosamente");
     } else if (result.errors) {
       const firstError = Object.values(result.errors)[0];
       if (firstError) {
@@ -59,18 +75,22 @@ export default function Home() {
 
   const handleRemoveDeposit = async (id: number) => {
     await removeDeposit(id);
-    toast.success('Depósito eliminado');
+    toast.success("Depósito eliminado");
   };
 
   const handleClearAll = async () => {
     if (deposits.length === 0) {
-      toast.info('No hay depósitos para limpiar');
+      toast.info("No hay depósitos para limpiar");
       return;
     }
-    
-    if (window.confirm('¿Estás seguro de que deseas eliminar todos los depósitos?')) {
+
+    if (
+      window.confirm(
+        "¿Estás seguro de que deseas eliminar todos los depósitos?"
+      )
+    ) {
       await clearAllDeposits();
-      toast.success('Todos los depósitos han sido eliminados');
+      toast.success("Todos los depósitos han sido eliminados");
     }
   };
 
@@ -82,7 +102,7 @@ export default function Home() {
         toast.error(firstError);
       }
     } else {
-      toast.success('Depósito actualizado exitosamente');
+      toast.success("Depósito actualizado exitosamente");
     }
   };
 
@@ -97,7 +117,10 @@ export default function Home() {
                 <DollarSign className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'var(--font-poppins)' }}>
+                <h1
+                  className="text-2xl font-bold text-foreground"
+                  style={{ fontFamily: "var(--font-poppins)" }}
+                >
                   Generador de Depósitos
                 </h1>
                 <p className="text-sm text-muted-foreground">
@@ -106,7 +129,9 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">{user?.name || user?.email}</span>
+              <span className="text-sm text-muted-foreground">
+                {user?.name || user?.email}
+              </span>
               <button
                 onClick={logout}
                 className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -129,12 +154,12 @@ export default function Home() {
 
           {/* Columna derecha: Tabla (60%) */}
           <div className="lg:col-span-3">
-          <DepositTable
-            deposits={deposits}
-            onRemove={handleRemoveDeposit}
-            onClearAll={handleClearAll}
-            onEdit={handleEditDeposit}
-          />
+            <DepositTable
+              deposits={deposits}
+              onRemove={handleRemoveDeposit}
+              onClearAll={handleClearAll}
+              onEdit={handleEditDeposit}
+            />
           </div>
         </div>
       </main>
@@ -143,7 +168,8 @@ export default function Home() {
       <footer className="bg-secondary border-t border-border mt-16">
         <div className="container max-w-7xl mx-auto px-4 py-6">
           <p className="text-sm text-muted-foreground text-center">
-            © {new Date().getFullYear()} Generador de Depósitos Bancarios. Todos los derechos reservados.
+            © {new Date().getFullYear()} Generador de Depósitos Bancarios.
+            Todos los derechos reservados.
           </p>
         </div>
       </footer>
