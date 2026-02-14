@@ -1,93 +1,106 @@
-# Generador de Depósitos Bancarios a Excel
+# 📊 Generador de Depósitos Bancarios a Excel
 
-Este proyecto es una aplicación Full-Stack diseñada para facilitar la creación y gestión de depósitos bancarios, permitiendo exportarlos fácilmente a archivos Excel. Está optimizada para un uso personal (un solo usuario admin) y funciona de forma totalmente independiente.
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![tRPC](https://img.shields.io/badge/tRPC-%232596be.svg?style=for-the-badge&logo=trpc&logoColor=white)
+![Drizzle](https://img.shields.io/badge/Drizzle_ORM-C5F015?style=for-the-badge&logo=drizzle&logoColor=black)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-## 🚀 Características Principales
-
-- **Gestión de Depósitos:** Formulario intuitivo para ingresar datos (fecha, cuenta, cliente, monto, tipo de depósito, remito, bolsa).
-- **Exportación a Excel:** Genera archivos `.xlsx` profesionales con formato automático de columnas y moneda.
-- **Autenticación Manual:** Sistema de login local (Email/Password) sin dependencias externas (OAuth desactivado para desarrollo/uso local).
-- **Seguridad:** Protección de rutas mediante tRPC, Row Level Security (RLS) preparado para Supabase y hashing de contraseñas con Bcrypt.
-- **Diseño Moderno:** Interfaz corporativa minimalista construida con Tailwind CSS y componentes de Radix UI.
-
-## 🛠️ Stack Tecnológico
-
-- **Frontend:** React 19, Vite, Tailwind CSS 4, Radix UI, TanStack Query.
-- **Backend:** Node.js, Express, tRPC (para una API con tipos seguros).
-- **Base de Datos:** PostgreSQL a través de **Supabase**.
-- **ORM:** Drizzle ORM.
-- **Utilidades:** Lucide React (iconos), XLSX (exportación), Bcryptjs (seguridad).
-
-## 📦 Instalación y Configuración
-
-1.  **Clonar el repositorio:**
-
-    ```bash
-    git clone <url-del-repositorio>
-    cd generador-depositos-excel
-    ```
-
-2.  **Instalar dependencias:**
-
-    ```bash
-    pnpm install
-    ```
-
-3.  **Configurar variables de entorno:**
-    Crea un archivo `.env` en la raíz (puedes basarte en el ejemplo):
-
-    ```env
-    DATABASE_URL="tu-url-de-supabase-postgresql"
-    JWT_SECRET="una-clave-secreta-larga-y-segura"
-    VITE_APP_ID="manual-dev"
-    PORT=3000
-    ```
-
-4.  **Preparar la Base de Datos:**
-    Sincroniza el esquema con Supabase:
-
-    ```bash
-    pnpm db:push
-    ```
-
-5.  **Crear Usuario Administrador:**
-    Ejecuta el script de seeding para inicializar al admin:
-    ```bash
-    npx tsx scripts/seed-admin.ts
-    ```
-    _Credenciales por defecto: `admin@example.com` / `admin`_
-
-## 🚀 Ejecución
-
-### Desarrollo
-
-```bash
-pnpm dev
-```
-
-La aplicación se abrirá en `http://localhost:3000` (o el siguiente puerto disponible).
-
-### Producción (Local)
-
-```bash
-pnpm build
-pnpm start
-```
-
-## 📂 Estructura del Proyecto
-
-- `/client`: Frontend en React.
-- `/server`: Backend en Express + tRPC.
-- `/shared`: Tipos y constantes compartidas.
-- `/drizzle`: Definición de esquema y migraciones.
-- `/scripts`: Utilidades (como la creación de admin).
-
-## 🔒 Notas para el Desarrollador
-
-- **RLS en Supabase:** Se recomienda habilitar RLS en las tablas `users` y `deposits` sin crear políticas públicas. El servidor utiliza una conexión administrativa que ignora RLS, bloqueando cualquier acceso externo no autorizado.
-- **Autenticación:** El sistema usa cookies `httpOnly` para la sesión. En desarrollo local, se configura `sameSite: "lax"`.
-- **Exportación:** La lógica de Excel se encuentra en `client/src/lib/excelExporter.ts`.
+Este proyecto es una aplicación **Full-Stack** moderna y robusta diseñada para la gestión profesional de depósitos bancarios y su posterior exportación a formatos compatibles con hojas de cálculo.
 
 ---
 
-Desarrollado con enfoque profesional y minimalista.
+## 🛠️ Origen y Evolución del Proyecto
+
+Este proyecto nació de una base generada con **Manus AI**, la cual utilicé como punto de partida para acelerar el desarrollo inicial. Sin embargo, realicé profundas personalizaciones y mejoras críticas para convertirlo en una herramienta lista para producción:
+
+- **Integración con Supabase**: Reconstruí la capa de datos para conectar el proyecto con una base de datos PostgreSQL hospedada en Supabase, configurando la cadena de conexión y optimizando las consultas con Drizzle ORM.
+- **Refactorización del Diseño**: Rediseñé la interfaz de usuario para lograr una estética más limpia, corporativa y profesional, ajustando componentes de Radix UI y personalizando estilos en Tailwind CSS 4.
+- **Lógica de Negocio Adaptada**: Ajusté los esquemas de validación (Zod) y los endpoints de tRPC para cumplir con las necesidades específicas de la gestión financiera real.
+
+---
+
+## 🛠️ Stack Tecnológico (Power Stack)
+
+El proyecto utiliza una arquitectura de vanguardia para garantizar el máximo rendimiento y seguridad:
+
+### **Frontend**
+
+- **React 19**: Aprovechando las últimas mejoras de rendimiento y hooks del ecosistema.
+- **Tailwind CSS 4**: Motor de estilos de próxima generación para una interfaz ultra-rápida y personalizable.
+- **Shadcn/UI & Radix UI**: Componentes de interfaz accesibles, minimalistas y altamente estéticos.
+- **Wouter**: Enrutador ligero y eficiente optimizado para aplicaciones modernas.
+- **TanStack Query (v5)**: Gestión inteligente de caché y sincronización de datos con el servidor.
+
+### **Backend & API**
+
+- **tRPC**: Comunicación **End-to-End Type-Safe** entre cliente y servidor.
+- **Node.js & Express**: Servidor ligero para manejar la lógica de negocio.
+- **Zod**: Validación estricta de esquemas y datos.
+
+### **Base de Datos & Almacenamiento**
+
+- **Drizzle ORM**: El ORM más rápido y ligero para TypeScript.
+- **PostgreSQL (Supabase)**: Motor de base de datos relacional de alta fiabilidad.
+
+---
+
+## 🚀 Características Principales
+
+- **Gestión Profesional de Depósitos**: Registro detallado con formularios validados.
+- **Exportación Inteligente**: Motor basado en `XLSX` para generar reportes en Excel perfectamente formateados.
+- **Seguridad Garantizada**:
+  - Hash de contraseñas mediante **Bcryptjs**.
+  - Autenticación segura con **JOSE (JWT)** y cookies `httpOnly`.
+- **Arquitectura Limpia**: Separación clara entre `/client`, `/server` y `/shared`.
+
+---
+
+## 📦 Guía de Inicio Rápido
+
+### Requisitos Previos
+
+- Node.js (v20+)
+- **PNPM** (v10)
+
+### 1. Preparación del Entorno
+
+```bash
+pnpm install
+```
+
+### 2. Configuración de Variables
+
+Crea tu archivo `.env`:
+
+```env
+DATABASE_URL="tu_url_de_postgress_supabase"
+JWT_SECRET="una_cadena_secreta_para_tokens"
+PORT=3000
+```
+
+### 3. Sincronización de Base de Datos
+
+```bash
+pnpm db:push
+```
+
+### 4. Inicializar Administrador
+
+```bash
+npx tsx scripts/seed-admin.ts
+```
+
+---
+
+## 📂 Estructura del Proyecto
+
+- `client/`: Aplicación React + Vite.
+- `server/`: Servidor Express + tRPC.
+- `shared/`: Tipos compartidos y esquemas de Zod.
+- `drizzle/`: Definiciones de tablas y configuración de base de datos.
+- `scripts/`: Herramientas de utilidad y seeding.
+
+---
+
+Desarrollado con precisión, integrando el poder de la IA con el control y personalización del desarrollo especializado. 📈
