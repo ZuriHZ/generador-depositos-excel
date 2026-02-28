@@ -1,21 +1,13 @@
 {
   "version": 2,
   "functions": {
-    "server/_core/index.ts": {
+    "api/index.ts": {
       "maxDuration": 30
     }
   },
   "routes": [
-    {
-      "src": "/api/trpc/(.*)",
-      "dest": "server/_core/index.ts"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/index.html"
-    }
+    { "src": "/api/trpc/(.*)", "dest": "/api/index.ts" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/client/index.html" }
   ]
 }
