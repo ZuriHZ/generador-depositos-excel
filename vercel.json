@@ -1,20 +1,18 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
+  "functions": {
+    "server/_core/index.ts": {
+      "runtime": "vercel-node@latest"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/api/trpc/(.*)",
-      "dest": "server/_core/index.ts"
+      "source": "/api/trpc/(.*)",
+      "destination": "/server/_core/index.ts"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
