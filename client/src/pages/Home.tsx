@@ -153,7 +153,7 @@ export default function Home() {
           </div>
 
           {/* Columna derecha: Tabla (60%) */}
-          <div className="lg:col-span-3">
+          <div className="flex">
             <DepositTable
               deposits={deposits}
               onRemove={handleRemoveDeposit}

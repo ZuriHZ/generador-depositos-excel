@@ -98,7 +98,7 @@ export default function DepositTable({
   const totalAmount = deposits.reduce((sum, deposit) => sum + deposit.monto, 0);
 
   return (
-    <div className="space-y-4">
+    <div className="">
       {/* Encabezado con estadísticas */}
       <div className="flex items-center justify-between">
         <div>
