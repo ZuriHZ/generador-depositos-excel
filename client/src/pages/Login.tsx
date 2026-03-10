@@ -2,30 +2,19 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { DollarSign, Lock, Mail, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: () => {
       toast.success("Sesión iniciada correctamente");
       setLocation("/");
-      // Full page reload to refresh auth state in all contexts
       window.location.href = "/";
     },
     onError: error => {
@@ -45,90 +34,126 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary flex items-center justify-center p-4">
-      <div className="w-full max-w-md animate-fade-in-up">
-        <div className="flex justify-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 rotate-3 transition-transform hover:rotate-0 duration-300">
-            <DollarSign className="w-10 h-10 text-primary-foreground" />
+    <div className="login-page">
+      {/* ---- Brand Panel ---- */}
+      <div className="login-brand-panel">
+        <div className="login-brand-logo">
+          <div className="login-brand-logo-mark">
+            <div className="login-brand-logo-icon">$</div>
+            <span className="login-brand-logo-text">Depósitos</span>
           </div>
         </div>
 
-        <Card className="border-none shadow-xl bg-white/80 backdrop-blur-md">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle
-              className="text-2xl font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-poppins)" }}
-            >
-              Bienvenido de nuevo
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Ingresa tus credenciales para acceder al panel
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Correo Electrónico
-                </Label>
-                <div className="relative group">
-                  <div className="absolute left-3 top-2.5 text-muted-foreground transition-colors group-focus-within:text-primary">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="admin@example.com"
-                    className="pl-10 h-11 transition-all border-muted focus:border-primary"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    disabled={isLoading}
-                    required
-                  />
-                </div>
+        <div className="login-brand-content">
+          <h1 className="login-brand-headline">
+            Automatiza la gestión de tus <em>depósitos bancarios</em>
+          </h1>
+          <p className="login-brand-description">
+            Genera archivos Excel listos para el banco en segundos. Sin errores
+            manuales, sin demoras.
+          </p>
+        </div>
+
+        <div className="login-brand-footer">
+          © {new Date().getFullYear()} Generador de Depósitos
+        </div>
+      </div>
+
+      {/* ---- Form Panel ---- */}
+      <div className="login-form-panel">
+        <div className="login-form-wrapper">
+          {/* Mobile brand */}
+          <div className="login-mobile-brand">
+            <div className="login-mobile-brand-icon">$</div>
+            <span className="login-mobile-brand-text">Depósitos</span>
+          </div>
+
+          <header className="login-form-header">
+            <h2 className="login-form-greeting">Bienvenido de nuevo</h2>
+            <p className="login-form-subtitle">
+              Ingresa tus credenciales para continuar
+            </p>
+          </header>
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="login-field-group">
+              <label htmlFor="email" className="login-field-label">
+                Correo electrónico
+              </label>
+              <div className="login-field-input-wrap">
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="admin@ejemplo.com"
+                  className="login-field-input"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  onFocus={() => setFocusedField("email")}
+                  onBlur={() => setFocusedField(null)}
+                  disabled={isLoading}
+                  required
+                  autoComplete="email"
+                />
+                <div
+                  className="login-field-focus-line"
+                  data-focused={focusedField === "email"}
+                />
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Contraseña</Label>
-                </div>
-                <div className="relative group">
-                  <div className="absolute left-3 top-2.5 text-muted-foreground transition-colors group-focus-within:text-primary">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    className="pl-10 h-11 transition-all border-muted focus:border-primary"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    disabled={isLoading}
-                    required
-                  />
-                </div>
+            </div>
+
+            <div className="login-field-group">
+              <label htmlFor="password" className="login-field-label">
+                Contraseña
+              </label>
+              <div className="login-field-input-wrap">
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="login-field-input"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  onFocus={() => setFocusedField("password")}
+                  onBlur={() => setFocusedField(null)}
+                  disabled={isLoading}
+                  required
+                  autoComplete="current-password"
+                />
+                <div
+                  className="login-field-focus-line"
+                  data-focused={focusedField === "password"}
+                />
               </div>
-              <Button
+            </div>
+
+            <div className="login-submit-wrap">
+              <button
                 type="submit"
-                className="w-full h-11 text-base font-semibold transition-all hover:scale-[1.01] active:scale-[0.99]"
+                className="login-submit-btn"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Iniciando sesión...
+                    <Loader2
+                      style={{ width: 18, height: 18 }}
+                      className="animate-spin"
+                    />
+                    <span>Iniciando sesión...</span>
                   </>
                 ) : (
-                  "Iniciar Sesión"
+                  <span>Iniciar Sesión</span>
                 )}
-              </Button>
-            </form>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <div className="text-center text-sm text-muted-foreground">
-              <p>© {new Date().getFullYear()} Generador de Depósitos</p>
+              </button>
             </div>
-          </CardFooter>
-        </Card>
+          </form>
+
+          <footer className="login-form-footer">
+            <span className="login-form-footer-sep" />
+            <p style={{ margin: 0 }}>
+              © {new Date().getFullYear()} Generador de Depósitos
+            </p>
+          </footer>
+        </div>
       </div>
     </div>
   );
