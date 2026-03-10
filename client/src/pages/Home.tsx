@@ -34,27 +34,86 @@ export default function Home() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 rounded-lg bg-primary flex items-center justify-center mx-auto mb-6">
-            <DollarSign className="w-10 h-10 text-primary-foreground" />
+      <div className="unauth-page">
+        {/* ---- Brand Panel ---- */}
+        <div className="unauth-brand-panel">
+          <div className="unauth-brand-logo">
+            <div className="unauth-brand-logo-mark">
+              <div className="unauth-brand-logo-icon">$</div>
+              <span className="unauth-brand-logo-text">Depósitos</span>
+            </div>
           </div>
-          <h1
-            className="text-3xl font-bold text-foreground mb-2"
-            style={{ fontFamily: "var(--font-poppins)" }}
-          >
-            Generador de Depósitos
-          </h1>
-          <p className="text-muted-foreground mb-8">
-            Inicia sesión para continuar
-          </p>
-          <a
-            href={getLoginUrl()}
-            className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-            style={{ fontFamily: "var(--font-poppins)" }}
-          >
-            Iniciar Sesión
-          </a>
+
+          <div className="unauth-brand-content">
+            <h1 className="unauth-brand-headline">
+              Genera tus reportes de <em>depósitos bancarios</em> en segundos
+            </h1>
+            <p className="unauth-brand-description">
+              Crea archivos Excel listos para el banco, sin errores manuales y
+              con trazabilidad completa.
+            </p>
+
+            <div className="unauth-features">
+              <div className="unauth-feature">
+                <span className="unauth-feature-marker" />
+                <span className="unauth-feature-text">
+                  Exportación inmediata a Excel
+                </span>
+              </div>
+              <div className="unauth-feature">
+                <span className="unauth-feature-marker" />
+                <span className="unauth-feature-text">
+                  Validación automática de datos
+                </span>
+              </div>
+              <div className="unauth-feature">
+                <span className="unauth-feature-marker" />
+                <span className="unauth-feature-text">
+                  Historial de depósitos en la nube
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="unauth-brand-footer">
+            © {new Date().getFullYear()} Generador de Depósitos
+          </div>
+        </div>
+
+        {/* ---- CTA Panel ---- */}
+        <div className="unauth-cta-panel">
+          <div className="unauth-cta-wrapper">
+            <div className="unauth-cta-icon-wrap">
+              <DollarSign className="unauth-cta-icon" />
+            </div>
+
+            <h2 className="unauth-cta-title">Bienvenido</h2>
+            <p className="unauth-cta-subtitle">
+              Inicia sesión para acceder al panel de generación de depósitos
+            </p>
+
+            <a href={getLoginUrl()} className="unauth-cta-btn">
+              <span>Iniciar Sesión</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
+
+            <div className="unauth-cta-footer-sep" />
+            <p className="unauth-cta-footer-text">
+              Acceso seguro con credenciales corporativas
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -168,8 +227,8 @@ export default function Home() {
       <footer className="bg-secondary border-t border-border mt-16">
         <div className="container max-w-7xl mx-auto px-4 py-6">
           <p className="text-sm text-muted-foreground text-center">
-            © {new Date().getFullYear()} Generador de Depósitos Bancarios.
-            Todos los derechos reservados.
+            © {new Date().getFullYear()} Generador de Depósitos Bancarios. Todos
+            los derechos reservados.
           </p>
         </div>
       </footer>
