@@ -22,7 +22,7 @@ import { getLoginUrl } from "@/const";
  * - Transiciones suaves de 200ms
  */
 export default function Home() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, loading } = useAuth();
   const {
     deposits,
     addDeposit,
@@ -31,6 +31,40 @@ export default function Home() {
     editDeposit,
     isLoading,
   } = useDepositsWithDB();
+
+  if (loading) {
+    return (
+      <div
+        className="dashboard-page"
+        style={{ alignItems: "center", justifyContent: "center" }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            animation:
+              "loginFadeSlideUp 600ms cubic-bezier(0.16, 1, 0.3, 1) both",
+          }}
+        >
+          <div className="dashboard-logo-icon loader-pulse">$</div>
+          <p
+            style={{
+              marginTop: "1.5rem",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontWeight: 600,
+              color: "oklch(60% 0.02 250)",
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+              fontSize: "0.8125rem",
+            }}
+          >
+            Iniciando sistema...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -166,72 +200,45 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-page">
       {/* Encabezado */}
-      <header className="bg-white border-b border-border shadow-sm sticky top-0 z-50">
-        <div className="container max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <div>
-                <h1
-                  className="text-2xl font-bold text-foreground"
-                  style={{ fontFamily: "var(--font-poppins)" }}
-                >
-                  Generador de Depósitos
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Crea y exporta depósitos bancarios a Excel
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">
-                {user?.name || user?.email}
-              </span>
-              <button
-                onClick={logout}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Salir
-              </button>
-            </div>
-          </div>
+      <header className="dashboard-header h-12">
+        <div className="dashboard-logo">
+          <div className="dashboard-logo-icon">$</div>
+          <span className="dashboard-logo-text">Depósitos</span>
+        </div>
+        <div className="dashboard-footer ">
+          © {new Date().getFullYear()} Generador de Depósitos. Todos los
+          derechos reservados.
+        </div>
+        <div className="dashboard-userinfo">
+          <span className="dashboard-username">
+            {user?.name || user?.email}
+          </span>
+          <button onClick={logout} className="dashboard-logout-btn">
+            <LogOut className="w-4 h-4" />
+            <span>Salir</span>
+          </button>
         </div>
       </header>
 
       {/* Contenido principal */}
-      <main className="container max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Columna izquierda: Formulario (40%) */}
-          <div className="lg:col-span-2">
-            <DepositForm onSubmit={handleAddDeposit} isLoading={isLoading} />
-          </div>
+      <main className="dashboard-main">
+        {/* Columna izquierda: Formulario */}
+        <div className="dashboard-form-col">
+          <DepositForm onSubmit={handleAddDeposit} isLoading={isLoading} />
+        </div>
 
-          {/* Columna derecha: Tabla (60%) */}
-          <div className="flex">
-            <DepositTable
-              deposits={deposits}
-              onRemove={handleRemoveDeposit}
-              onClearAll={handleClearAll}
-              onEdit={handleEditDeposit}
-            />
-          </div>
+        {/* Columna derecha: Tabla */}
+        <div className="dashboard-table-col">
+          <DepositTable
+            deposits={deposits}
+            onRemove={handleRemoveDeposit}
+            onClearAll={handleClearAll}
+            onEdit={handleEditDeposit}
+          />
         </div>
       </main>
-
-      {/* Pie de página */}
-      <footer className="bg-secondary border-t border-border mt-16">
-        <div className="container max-w-7xl mx-auto px-4 py-6">
-          <p className="text-sm text-muted-foreground text-center">
-            © {new Date().getFullYear()} Generador de Depósitos Bancarios. Todos
-            los derechos reservados.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

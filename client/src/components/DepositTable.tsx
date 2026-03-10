@@ -98,26 +98,51 @@ export default function DepositTable({
   const totalAmount = deposits.reduce((sum, deposit) => sum + deposit.monto, 0);
 
   return (
-    <div className="">
+    <div
+      className="dashboard-card"
+      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
+    >
       {/* Encabezado con estadísticas */}
-      <div className="flex items-center justify-between">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+        }}
+      >
         <div>
-          <h2
-            className="text-xl font-bold text-foreground"
-            style={{ fontFamily: "var(--font-poppins)" }}
-          >
+          <h2 className="dashboard-section-title" style={{ margin: 0 }}>
             Depósitos Ingresados
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p
+            style={{
+              color: "oklch(60% 0.02 250)",
+              fontSize: "0.9375rem",
+              marginTop: "0.5rem",
+            }}
+          >
             {deposits.length} {deposits.length === 1 ? "depósito" : "depósitos"}
           </p>
         </div>
         {deposits.length > 0 && (
-          <div className="text-right">
-            <p className="text-sm text-muted-foreground">Total</p>
+          <div style={{ textAlign: "right" }}>
             <p
-              className="text-2xl font-bold text-primary"
-              style={{ fontFamily: "var(--font-poppins)" }}
+              style={{
+                color: "oklch(60% 0.02 250)",
+                fontSize: "0.875rem",
+                margin: 0,
+              }}
+            >
+              Total
+            </p>
+            <p
+              style={{
+                fontFamily: "'Fraunces', serif",
+                fontSize: "1.5rem",
+                fontWeight: 500,
+                color: "oklch(38% 0.1 250)",
+                margin: 0,
+              }}
             >
               {formatCurrency(totalAmount)}
             </p>
@@ -127,156 +152,208 @@ export default function DepositTable({
 
       {/* Tabla o mensaje vacío */}
       {deposits.length === 0 ? (
-        <Card className="p-12 bg-secondary border border-border shadow-sm">
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-              <FileDown className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <p
-              className="text-foreground font-medium mb-1"
-              style={{ fontFamily: "var(--font-poppins)" }}
-            >
-              No hay depósitos aún
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Completa el formulario para agregar depósitos
-            </p>
+        <div
+          style={{
+            padding: "4rem 2rem",
+            textAlign: "center",
+            background: "oklch(99% 0.002 250)",
+            borderRadius: "1rem",
+            border: "1px solid oklch(92% 0.01 250)",
+          }}
+        >
+          <div
+            style={{
+              width: "4rem",
+              height: "4rem",
+              margin: "0 auto 1.5rem",
+              borderRadius: "50%",
+              background: "oklch(96% 0.01 250)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "oklch(60% 0.02 250)",
+            }}
+          >
+            <FileDown size={32} />
           </div>
-        </Card>
+          <p
+            style={{
+              fontFamily: "'Fraunces', serif",
+              fontSize: "1.25rem",
+              color: "oklch(20% 0.02 250)",
+              margin: "0 0 0.5rem",
+            }}
+          >
+            No hay depósitos aún
+          </p>
+          <p
+            style={{
+              color: "oklch(60% 0.02 250)",
+              fontSize: "0.9375rem",
+              margin: 0,
+            }}
+          >
+            Completa el formulario para agregar depósitos
+          </p>
+        </div>
       ) : (
         <>
-          <Card className="bg-white border border-border shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-primary text-primary-foreground border-b border-border">
-                    <th
-                      className="px-4 py-3 text-left font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
+          <div className="refined-table-container">
+            <table className="refined-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Número de Cuenta</th>
+                  <th>Cliente</th>
+                  <th style={{ textAlign: "right" }}>Monto</th>
+                  <th>Tipo</th>
+                  <th>Remito</th>
+                  <th>Bolsa</th>
+                  <th style={{ textAlign: "center" }}>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {deposits.map(deposit => (
+                  <tr key={deposit.id}>
+                    <td>{formatDate(deposit.fecha)}</td>
+                    <td
+                      style={{
+                        fontFamily: "monospace",
+                        color: "oklch(45% 0.02 250)",
+                      }}
                     >
-                      Fecha
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
+                      {deposit.numeroCuenta}
+                    </td>
+                    <td
+                      style={{ fontWeight: 500, color: "oklch(20% 0.02 250)" }}
                     >
-                      Número de Cuenta
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
+                      {deposit.nombreCliente}
+                    </td>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        fontWeight: 600,
+                        color: "oklch(20% 0.02 250)",
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      }}
                     >
-                      Cliente
-                    </th>
-                    <th
-                      className="px-4 py-3 text-right font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
-                    >
-                      Monto
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
-                    >
-                      Tipo
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
-                    >
-                      Remito
-                    </th>
-                    <th
-                      className="px-4 py-3 text-left font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
-                    >
-                      Número de Bolsa
-                    </th>
-                    <th
-                      className="px-4 py-3 text-center font-bold"
-                      style={{ fontFamily: "var(--font-poppins)" }}
-                    >
-                      Acción
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deposits.map((deposit, index) => (
-                    <tr
-                      key={deposit.id}
-                      className={`border-b border-border transition-colors hover:bg-secondary ${
-                        index % 2 === 0 ? "bg-white" : "bg-secondary/30"
-                      }`}
-                    >
-                      <td className="px-4 py-3 text-foreground">
-                        {formatDate(deposit.fecha)}
-                      </td>
-                      <td className="px-4 py-3 text-foreground font-mono text-xs">
-                        {deposit.numeroCuenta}
-                      </td>
-                      <td className="px-4 py-3 text-foreground">
-                        {deposit.nombreCliente}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-right text-foreground font-semibold"
-                        style={{ fontFamily: "var(--font-poppins)" }}
+                      {formatCurrency(deposit.monto)}
+                    </td>
+                    <td>
+                      <span className="table-badge">
+                        {getDepositTypeLabel(deposit.tipoDeposito)}
+                      </span>
+                    </td>
+                    <td style={{ fontSize: "0.8125rem" }}>
+                      {deposit.remito || "—"}
+                    </td>
+                    <td style={{ fontSize: "0.8125rem" }}>
+                      {deposit.numeroBolsa || "—"}
+                    </td>
+                    <td>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "0.5rem",
+                        }}
                       >
-                        {formatCurrency(deposit.monto)}
-                      </td>
-                      <td className="px-4 py-3 text-foreground text-xs">
-                        <span className="inline-block px-2 py-1 bg-accent/10 text-accent rounded">
-                          {getDepositTypeLabel(deposit.tipoDeposito)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-foreground text-xs max-w-xs truncate">
-                        {deposit.remito || "—"}
-                      </td>
-                      <td className="px-4 py-3 text-foreground text-xs max-w-xs truncate">
-                        {deposit.numeroBolsa || "—"}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <button
-                            onClick={() => handleEditClick(deposit)}
-                            className="inline-flex items-center justify-center p-2 text-primary hover:bg-primary/10 rounded transition-colors"
-                            title="Editar depósito"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteClick(deposit)}
-                            className="inline-flex items-center justify-center p-2 text-destructive hover:bg-destructive/10 rounded transition-colors"
-                            title="Eliminar depósito"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
+                        <button
+                          onClick={() => handleEditClick(deposit)}
+                          title="Editar depósito"
+                          style={{
+                            padding: "0.5rem",
+                            color: "oklch(45% 0.02 250)",
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                            borderRadius: "0.375rem",
+                            transition: "all 150ms",
+                          }}
+                          onMouseOver={e => (
+                            (e.currentTarget.style.background =
+                              "oklch(96% 0.01 250)"),
+                            (e.currentTarget.style.color =
+                              "oklch(20% 0.02 250)")
+                          )}
+                          onMouseOut={e => (
+                            (e.currentTarget.style.background = "transparent"),
+                            (e.currentTarget.style.color =
+                              "oklch(45% 0.02 250)")
+                          )}
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(deposit)}
+                          title="Eliminar depósito"
+                          style={{
+                            padding: "0.5rem",
+                            color: "var(--destructive)",
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                            borderRadius: "0.375rem",
+                            transition: "all 150ms",
+                          }}
+                          onMouseOver={e =>
+                            (e.currentTarget.style.background =
+                              "color-mix(in srgb, var(--destructive) 10%, transparent)")
+                          }
+                          onMouseOut={e =>
+                            (e.currentTarget.style.background = "transparent")
+                          }
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {/* Botones de acción */}
-          <div className="flex gap-3">
-            <Button
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button
               onClick={handleExport}
-              className="flex-1 h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all duration-200 flex items-center justify-center gap-2"
-              style={{ fontFamily: "var(--font-poppins)" }}
+              className="login-submit-btn"
+              style={{ flex: 1, padding: "0 1.5rem" }}
             >
-              <FileDown className="w-4 h-4" />
-              Generar Excel
-            </Button>
-            <Button
+              <FileDown size={18} />
+              <span>Generar Excel</span>
+            </button>
+            <button
               onClick={onClearAll}
-              variant="outline"
-              className="flex-1 h-10 border-border text-foreground hover:bg-secondary font-medium transition-all duration-200"
-              style={{ fontFamily: "var(--font-poppins)" }}
+              style={{
+                flex: 1,
+                padding: "0 1.5rem",
+                height: "3rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                fontSize: "0.9375rem",
+                fontWeight: 600,
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                color: "oklch(40% 0.02 250)",
+                background: "transparent",
+                border: "1.5px solid oklch(88% 0.015 250)",
+                borderRadius: "0.625rem",
+                cursor: "pointer",
+                transition: "all 200ms ease",
+              }}
+              onMouseOver={e =>
+                (e.currentTarget.style.background = "oklch(96% 0.01 250)")
+              }
+              onMouseOut={e =>
+                (e.currentTarget.style.background = "transparent")
+              }
             >
               Limpiar Todo
-            </Button>
+            </button>
           </div>
         </>
       )}
