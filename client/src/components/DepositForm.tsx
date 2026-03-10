@@ -1,18 +1,6 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
-import { DepositFormData, ValidationErrors } from "@/hooks/useDeposits";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { DepositFormData, ValidationErrors } from "@/hooks/useDepositsWithDB";
 
 interface DepositFormProps {
   onSubmit: (data: DepositFormData) => void;
@@ -42,34 +30,21 @@ export default function DepositForm({
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Limpiar error cuando el usuario empieza a escribir
     if (errors[name as keyof ValidationErrors]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
   };
 
-  const handleSelectChange = (value: string) => {
-    setFormData(prev => ({ ...prev, tipoDeposito: value }));
-    if (errors.tipoDeposito) {
-      setErrors(prev => ({ ...prev, tipoDeposito: undefined }));
-    }
-  };
-
-  const handleBlur = (field: string) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    // Limpiar formulario después de envío exitoso
     setTimeout(() => {
       setFormData({
         fecha: new Date().toISOString().split("T")[0],
@@ -80,208 +55,311 @@ export default function DepositForm({
         remito: "",
         numeroBolsa: "",
       });
-      setTouched({});
+      setFocusedField(null);
     }, 100);
   };
 
-  const handleErrors = (newErrors: ValidationErrors) => {
-    setErrors(newErrors);
-  };
-
   return (
-    <Card className="p-6 bg-white border border-border shadow-sm">
-      <h2
-        className="text-xl font-bold text-foreground mb-6"
-        style={{ fontFamily: "var(--font-poppins)" }}
-      >
-        Nuevo Depósito
-      </h2>
+    <div className="dashboard-card">
+      <h2 className="dashboard-section-title">Nuevo Depósito</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit}>
         {/* Fecha */}
-        <div>
-          <Label htmlFor="fecha" className="text-sm text-foreground mb-2 block">
-            Fecha <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="fecha"
-            name="fecha"
-            type="date"
-            value={formData.fecha}
-            onChange={handleInputChange}
-            onBlur={() => handleBlur("fecha")}
-            className="w-full h-10 text-sm"
-            disabled={isLoading}
-          />
+        <div className="login-field-group">
+          <label htmlFor="fecha" className="login-field-label">
+            Fecha <span style={{ color: "var(--destructive)" }}>*</span>
+          </label>
+          <div className="login-field-input-wrap">
+            <input
+              id="fecha"
+              name="fecha"
+              type="date"
+              value={formData.fecha}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("fecha")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+              required
+            />
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "fecha"}
+            />
+          </div>
           {errors.fecha && (
-            <div className="flex items-center gap-2 mt-2 text-destructive text-sm">
-              <AlertCircle className="w-4 h-4" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "0.5rem",
+                color: "var(--destructive)",
+                fontSize: "0.875rem",
+                fontFamily: "var(--font-inter)",
+              }}
+            >
+              <AlertCircle size={16} />
               {errors.fecha}
             </div>
           )}
         </div>
 
         {/* Número de Cuenta */}
-        <div>
-          <Label
-            htmlFor="numeroCuenta"
-            className="text-sm text-foreground mb-2 block"
-          >
-            Número de Cuenta <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="numeroCuenta"
-            name="numeroCuenta"
-            type="text"
-            placeholder="Ej: 123456789"
-            value={formData.numeroCuenta}
-            onChange={handleInputChange}
-            onBlur={() => handleBlur("numeroCuenta")}
-            className="w-full h-10 text-sm"
-            disabled={isLoading}
-          />
+        <div className="login-field-group">
+          <label htmlFor="numeroCuenta" className="login-field-label">
+            Número de Cuenta{" "}
+            <span style={{ color: "var(--destructive)" }}>*</span>
+          </label>
+          <div className="login-field-input-wrap">
+            <input
+              id="numeroCuenta"
+              name="numeroCuenta"
+              type="text"
+              placeholder="Ej: 123456789"
+              value={formData.numeroCuenta}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("numeroCuenta")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+              required
+            />
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "numeroCuenta"}
+            />
+          </div>
           {errors.numeroCuenta && (
-            <div className="flex items-center gap-2 mt-2 text-destructive text-sm">
-              <AlertCircle className="w-4 h-4" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "0.5rem",
+                color: "var(--destructive)",
+                fontSize: "0.875rem",
+                fontFamily: "var(--font-inter)",
+              }}
+            >
+              <AlertCircle size={16} />
               {errors.numeroCuenta}
             </div>
           )}
         </div>
 
         {/* Nombre del Cliente */}
-        <div>
-          <Label
-            htmlFor="nombreCliente"
-            className="text-sm text-foreground mb-2 block"
-          >
-            Nombre del Cliente <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="nombreCliente"
-            name="nombreCliente"
-            type="text"
-            placeholder="Ej: Juan Pérez"
-            value={formData.nombreCliente}
-            onChange={handleInputChange}
-            onBlur={() => handleBlur("nombreCliente")}
-            className="w-full h-10 text-sm"
-            disabled={isLoading}
-          />
+        <div className="login-field-group">
+          <label htmlFor="nombreCliente" className="login-field-label">
+            Nombre del Cliente{" "}
+            <span style={{ color: "var(--destructive)" }}>*</span>
+          </label>
+          <div className="login-field-input-wrap">
+            <input
+              id="nombreCliente"
+              name="nombreCliente"
+              type="text"
+              placeholder="Ej: Juan Pérez"
+              value={formData.nombreCliente}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("nombreCliente")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+              required
+            />
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "nombreCliente"}
+            />
+          </div>
           {errors.nombreCliente && (
-            <div className="flex items-center gap-2 mt-2 text-destructive text-sm">
-              <AlertCircle className="w-4 h-4" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "0.5rem",
+                color: "var(--destructive)",
+                fontSize: "0.875rem",
+                fontFamily: "var(--font-inter)",
+              }}
+            >
+              <AlertCircle size={16} />
               {errors.nombreCliente}
             </div>
           )}
         </div>
 
         {/* Monto */}
-        <div>
-          <Label htmlFor="monto" className="text-sm text-foreground mb-2 block">
-            Monto <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="monto"
-            name="monto"
-            type="number"
-            placeholder="0.00"
-            step="0.01"
-            min="0"
-            value={formData.monto}
-            onChange={handleInputChange}
-            onBlur={() => handleBlur("monto")}
-            className="w-full h-10 text-sm"
-            disabled={isLoading}
-          />
+        <div className="login-field-group">
+          <label htmlFor="monto" className="login-field-label">
+            Monto <span style={{ color: "var(--destructive)" }}>*</span>
+          </label>
+          <div className="login-field-input-wrap">
+            <input
+              id="monto"
+              name="monto"
+              type="number"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              value={formData.monto}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("monto")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+              required
+            />
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "monto"}
+            />
+          </div>
           {errors.monto && (
-            <div className="flex items-center gap-2 mt-2 text-destructive text-sm">
-              <AlertCircle className="w-4 h-4" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "0.5rem",
+                color: "var(--destructive)",
+                fontSize: "0.875rem",
+                fontFamily: "var(--font-inter)",
+              }}
+            >
+              <AlertCircle size={16} />
               {errors.monto}
             </div>
           )}
         </div>
 
         {/* Tipo de Depósito */}
-        <div>
-          <Label
-            htmlFor="tipoDeposito"
-            className="text-sm text-foreground mb-2 block"
-          >
-            Tipo de Depósito <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.tipoDeposito}
-            onValueChange={handleSelectChange}
-          >
-            <SelectTrigger className="w-full h-10 text-sm">
-              <SelectValue placeholder="Selecciona un tipo" />
-            </SelectTrigger>
-            <SelectContent>
+        <div className="login-field-group">
+          <label htmlFor="tipoDeposito" className="login-field-label">
+            Tipo de Depósito{" "}
+            <span style={{ color: "var(--destructive)" }}>*</span>
+          </label>
+          <div className="login-field-input-wrap">
+            <select
+              id="tipoDeposito"
+              name="tipoDeposito"
+              value={formData.tipoDeposito}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("tipoDeposito")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+              required
+              style={{ appearance: "none" }}
+            >
+              <option value="" disabled>
+                Selecciona un tipo
+              </option>
               {DEPOSIT_TYPES.map(type => (
-                <SelectItem key={type.value} value={type.value}>
+                <option key={type.value} value={type.value}>
                   {type.label}
-                </SelectItem>
+                </option>
               ))}
-            </SelectContent>
-          </Select>
+            </select>
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "tipoDeposito"}
+            />
+          </div>
           {errors.tipoDeposito && (
-            <div className="flex items-center gap-2 mt-2 text-destructive text-sm">
-              <AlertCircle className="w-4 h-4" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "0.5rem",
+                color: "var(--destructive)",
+                fontSize: "0.875rem",
+                fontFamily: "var(--font-inter)",
+              }}
+            >
+              <AlertCircle size={16} />
               {errors.tipoDeposito}
             </div>
           )}
         </div>
 
         {/* Remito */}
-        <div>
-          <Label
-            htmlFor="remito"
-            className="text-sm text-foreground mb-2 block"
-          >
+        <div className="login-field-group">
+          <label htmlFor="remito" className="login-field-label">
             Remito
-          </Label>
-          <Input
-            id="remito"
-            name="remito"
-            type="text"
-            placeholder="Número de remito"
-            value={formData.remito || ""}
-            onChange={handleInputChange}
-            className="w-full text-sm"
-            disabled={isLoading}
-          />
+          </label>
+          <div className="login-field-input-wrap">
+            <input
+              id="remito"
+              name="remito"
+              type="text"
+              placeholder="Número de remito"
+              value={formData.remito || ""}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("remito")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+            />
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "remito"}
+            />
+          </div>
         </div>
 
         {/* Número de Bolsa */}
-        <div>
-          <Label
-            htmlFor="numeroBolsa"
-            className="text-sm text-foreground mb-2 block"
-          >
+        <div className="login-field-group">
+          <label htmlFor="numeroBolsa" className="login-field-label">
             Número de Bolsa
-          </Label>
-          <Input
-            id="numeroBolsa"
-            name="numeroBolsa"
-            type="text"
-            placeholder="Número de bolsa"
-            value={formData.numeroBolsa || ""}
-            onChange={handleInputChange}
-            className="w-full text-sm"
-            disabled={isLoading}
-          />
+          </label>
+          <div className="login-field-input-wrap">
+            <input
+              id="numeroBolsa"
+              name="numeroBolsa"
+              type="text"
+              placeholder="Número de bolsa"
+              value={formData.numeroBolsa || ""}
+              onChange={handleInputChange}
+              onFocus={() => setFocusedField("numeroBolsa")}
+              onBlur={() => setFocusedField(null)}
+              className="login-field-input"
+              disabled={isLoading}
+            />
+            <div
+              className="login-field-focus-line"
+              data-focused={focusedField === "numeroBolsa"}
+            />
+          </div>
         </div>
 
         {/* Botón Agregar */}
-        <Button
-          type="submit"
-          className="w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all duration-200"
-          style={{ fontFamily: "var(--font-poppins)" }}
-          disabled={isLoading}
+        <div
+          className="login-submit-wrap"
+          style={{ marginTop: "2.5rem", animation: "none" }}
         >
-          {isLoading ? "Agregando..." : "Agregar Depósito"}
-        </Button>
+          <button
+            type="submit"
+            className="login-submit-btn"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2
+                  style={{ width: 18, height: 18 }}
+                  className="animate-spin"
+                />
+                <span>Agregando...</span>
+              </>
+            ) : (
+              <span>Agregar Depósito</span>
+            )}
+          </button>
+        </div>
       </form>
-    </Card>
+    </div>
   );
 }
