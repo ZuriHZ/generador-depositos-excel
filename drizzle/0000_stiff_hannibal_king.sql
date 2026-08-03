@@ -14,15 +14,15 @@ CREATE TABLE "deposits" (
 --> statement-breakpoint
 CREATE TABLE "users" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"openId" varchar(64) NOT NULL,
+	"clerkId" varchar(64) NOT NULL,
 	"name" text,
-	"email" varchar(320),
-	"loginMethod" varchar(64),
+	"email" varchar(320) NOT NULL,
 	"role" text DEFAULT 'user' NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	"lastSignedIn" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "users_openId_unique" UNIQUE("openId")
+	CONSTRAINT "users_clerkId_unique" UNIQUE("clerkId"),
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 ALTER TABLE "deposits" ADD CONSTRAINT "deposits_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;

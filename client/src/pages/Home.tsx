@@ -9,8 +9,9 @@ import {
   ValidationErrors,
 } from "@/hooks/useDepositsWithDB";
 import { toast } from "sonner";
-import { DollarSign, LogOut } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { UserButton } from "@clerk/react";
 
 /**
  * Página principal del Generador de Excel para Depósitos Bancarios
@@ -22,7 +23,7 @@ import { getLoginUrl } from "@/const";
  * - Transiciones suaves de 200ms
  */
 export default function Home() {
-  const { user, isAuthenticated, logout, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const {
     deposits,
     addDeposit,
@@ -215,10 +216,7 @@ export default function Home() {
           <span className="dashboard-username">
             {user?.name || user?.email}
           </span>
-          <button onClick={logout} className="dashboard-logout-btn">
-            <LogOut className="w-4 h-4" />
-            <span>Salir</span>
-          </button>
+          <UserButton />
         </div>
       </header>
 

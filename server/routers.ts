@@ -1,5 +1,3 @@
-import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
@@ -8,65 +6,16 @@ import {
   getDepositsByUserId,
   updateDeposit,
   deleteDeposit,
-  getUserByEmail,
-  upsertUser,
 } from "./db";
-import bcrypt from "bcryptjs";
-import { sdk } from "./_core/sdk";
-import { ONE_YEAR_MS } from "@shared/const";
 
 export const appRouter = router({
   system: systemRouter,
   auth: router({
+    /** Returns the currently authenticated user from DB, or null */
     me: publicProcedure.query(opts => opts.ctx.user),
-    login: publicProcedure
-      .input(
-        z.object({
-          email: z.string().email(),
-          password: z.string(),
-        })
-      )
-      .mutation(async ({ input, ctx }) => {
-        const user = await getUserByEmail(input.email);
-        if (!user || !user.password) {
-          throw new Error("Invalid email or password");
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-          input.password,
-          user.password
-        );
-        if (!isPasswordValid) {
-          throw new Error("Invalid email or password");
-        }
-
-        // For manual users, we use email as openId or a specific format
-        const sessionToken = await sdk.createSessionToken(user.openId!, {
-          name: user.name || user.email,
-          expiresInMs: ONE_YEAR_MS,
-        });
-
-        // Update lastSignedIn
-        await upsertUser({
-          openId: user.openId!,
-          email: user.email,
-          lastSignedIn: new Date(),
-        });
-
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        ctx.res.cookie(COOKIE_NAME, sessionToken, {
-          ...cookieOptions,
-          maxAge: ONE_YEAR_MS,
-        });
-
-        return { success: true, user };
-      }),
-    logout: publicProcedure.mutation(({ ctx }) => {
-      const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+    /** Logout is handled client-side by Clerk — this is a no-op kept for compatibility */
+    logout: publicProcedure.mutation(() => {
+      return { success: true } as const;
     }),
   }),
 

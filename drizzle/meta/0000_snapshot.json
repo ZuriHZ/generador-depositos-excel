@@ -1,5 +1,5 @@
 {
-  "id": "c5fbbd2b-2550-454d-9d62-6e6ba1efe4d1",
+  "id": "2705a581-31d0-41d2-9409-c1daff102ce4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -83,8 +83,12 @@
           "name": "deposits_userId_users_id_fk",
           "tableFrom": "deposits",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -105,8 +109,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "openId": {
-          "name": "openId",
+        "clerkId": {
+          "name": "clerkId",
           "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
@@ -121,13 +125,7 @@
           "name": "email",
           "type": "varchar(320)",
           "primaryKey": false,
-          "notNull": false
-        },
-        "loginMethod": {
-          "name": "loginMethod",
-          "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "role": {
           "name": "role",
@@ -162,10 +160,19 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_openId_unique": {
-          "name": "users_openId_unique",
+        "users_clerkId_unique": {
+          "name": "users_clerkId_unique",
           "nullsNotDistinct": false,
-          "columns": ["openId"]
+          "columns": [
+            "clerkId"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
