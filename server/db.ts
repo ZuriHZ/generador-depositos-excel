@@ -8,7 +8,6 @@ import {
   InsertDepositInput,
   Deposit,
 } from "../drizzle/schema";
-import { ENV } from "./_core/env";
 
 const { Pool } = pg;
 
@@ -20,9 +19,10 @@ export async function getDb() {
     try {
       const pool = new Pool({
         connectionString: process.env.DATABASE_URL,
-        ssl: process.env.DATABASE_URL?.includes("localhost")
-          ? false
-          : { rejectUnauthorized: false },
+        // Neon requires SSL with proper certificate validation
+        ssl: process.env.DATABASE_URL?.includes("localhost") ? false : true,
+        // Keep connections alive for serverless
+        idleTimeoutMillis: 60_000,
       });
       _db = drizzle(pool);
     } catch (error) {
@@ -33,69 +33,12 @@ export async function getDb() {
   return _db;
 }
 
-export async function upsertUser(user: InsertUser): Promise<void> {
-  if (!user.openId) {
-    throw new Error("User openId is required for upsert");
-  }
+// ─── User Operations ────────────────────────────────────────────────
 
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot upsert user: database not available");
-    return;
-  }
-
-  try {
-    const values: InsertUser = {
-      openId: user.openId,
-      email: user.email,
-    };
-    const updateSet: Record<string, any> = {};
-
-    const textFields = ["name", "email", "loginMethod"] as const;
-    type TextField = (typeof textFields)[number];
-
-    const assignNullable = (field: TextField) => {
-      const value = user[field];
-      if (value === undefined) return;
-      const normalized = value ?? null;
-      (values as any)[field] = normalized;
-      updateSet[field] = normalized;
-    };
-
-    textFields.forEach(assignNullable);
-
-    if (user.lastSignedIn !== undefined) {
-      values.lastSignedIn = user.lastSignedIn;
-      updateSet.lastSignedIn = user.lastSignedIn;
-    }
-    if (user.role !== undefined) {
-      values.role = user.role;
-      updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
-      values.role = "admin";
-      updateSet.role = "admin";
-    }
-
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    // PostgreSQL specific On Conflict Update
-    await db.insert(users).values(values).onConflictDoUpdate({
-      target: users.openId,
-      set: updateSet,
-    });
-  } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
-    throw error;
-  }
-}
-
-export async function getUserByOpenId(openId: string) {
+/**
+ * Find a user by their Clerk ID (primary auth identifier).
+ */
+export async function getUserByClerkId(clerkId: string) {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get user: database not available");
@@ -105,12 +48,15 @@ export async function getUserByOpenId(openId: string) {
   const result = await db
     .select()
     .from(users)
-    .where(eq(users.openId, openId))
+    .where(eq(users.clerkId, clerkId))
     .limit(1);
 
   return result.length > 0 ? result[0] : undefined;
 }
 
+/**
+ * Find a user by their email address.
+ */
 export async function getUserByEmail(email: string) {
   const db = await getDb();
   if (!db) return undefined;
@@ -121,6 +67,56 @@ export async function getUserByEmail(email: string) {
     .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
+
+/**
+ * Create or update a user based on their Clerk ID.
+ * Called on every authenticated request to keep user data in sync with Clerk.
+ */
+export async function upsertUser(user: {
+  clerkId: string;
+  email: string;
+  name?: string | null;
+  role?: "user" | "admin";
+}): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot upsert user: database not available");
+    return;
+  }
+
+  try {
+    const values: InsertUser = {
+      clerkId: user.clerkId,
+      email: user.email,
+      name: user.name ?? null,
+      role: user.role ?? "user",
+      lastSignedIn: new Date(),
+    };
+
+    const updateSet: Record<string, any> = {
+      email: user.email,
+      lastSignedIn: new Date(),
+      updatedAt: new Date(),
+    };
+
+    if (user.name != null) {
+      updateSet.name = user.name;
+    }
+
+    // Don't overwrite role on upsert — only set it on first creation
+    // Admin role should be set manually via DB or a separate admin endpoint
+
+    await db.insert(users).values(values).onConflictDoUpdate({
+      target: users.clerkId,
+      set: updateSet,
+    });
+  } catch (error) {
+    console.error("[Database] Failed to upsert user:", error);
+    throw error;
+  }
+}
+
+// ─── Deposit Operations ─────────────────────────────────────────────
 
 export async function createDeposit(
   userId: number,

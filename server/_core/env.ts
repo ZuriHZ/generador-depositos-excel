@@ -1,9 +1,10 @@
 export const ENV = {
   appId: process.env.VITE_APP_ID ?? "generador-depositos",
-  cookieSecret: process.env.JWT_SECRET ?? "default-secret-change-me",
   databaseUrl: process.env.DATABASE_URL ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.FORGE_API_URL ?? "",
   forgeApiKey: process.env.FORGE_API_KEY ?? "",
-  ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
+  // Clerk
+  clerkSecretKey: process.env.CLERK_SECRET_KEY ?? "",
+  clerkPublishableKey: process.env.VITE_CLERK_PUBLISHABLE_KEY ?? "",
 };

@@ -10,17 +10,15 @@ import {
 } from "drizzle-orm/pg-core";
 
 /**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
+ * Core user table synced with Clerk auth.
+ * The `clerkId` maps to the Clerk user ID (e.g. "user_2abc...").
+ * App-specific fields like `role` live here; auth fields live in Clerk.
  */
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  openId: varchar("openId", { length: 64 }).unique(), // Made optional for manual users
+  clerkId: varchar("clerkId", { length: 64 }).notNull().unique(),
   name: text("name"),
-  email: varchar("email", { length: 320 }).notNull().unique(), // Email is now mandatory and unique
-  password: text("password"), // New field for manual login
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  email: varchar("email", { length: 320 }).notNull().unique(),
   role: text("role", { enum: ["user", "admin"] })
     .default("user")
     .notNull(),
