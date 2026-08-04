@@ -1,17 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { trpc } from "@/lib/trpc";
 import DepositForm from "@/components/DepositForm";
 import DepositTable from "@/components/DepositTable";
 import {
   useDepositsWithDB,
   DepositFormData,
-  ValidationErrors,
 } from "@/hooks/useDepositsWithDB";
 import { toast } from "sonner";
 import { DollarSign } from "lucide-react";
 import { getLoginUrl } from "@/const";
-import { UserButton } from "@clerk/react";
 
 /**
  * Página principal del Generador de Excel para Depósitos Bancarios
@@ -23,6 +20,7 @@ import { UserButton } from "@clerk/react";
  * - Transiciones suaves de 200ms
  */
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<"form" | "history">("form");
   const { user, isAuthenticated, loading } = useAuth();
   const {
     deposits,
@@ -201,41 +199,56 @@ export default function Home() {
   };
 
   return (
-    <div className="dashboard-page">
-      {/* Encabezado */}
-      <header className="dashboard-header h-12">
-        <div className="dashboard-logo">
-          <div className="dashboard-logo-icon">$</div>
-          <span className="dashboard-logo-text">Depósitos</span>
-        </div>
-        <div className="dashboard-footer ">
-          © {new Date().getFullYear()} Generador de Depósitos. Todos los
-          derechos reservados.
-        </div>
-        <div className="dashboard-userinfo">
-          <span className="dashboard-username">
-            {user?.name || user?.email}
-          </span>
-          <UserButton />
-        </div>
+    <div className="ledger-page">
+      {/* Título centrado */}
+      <header className="ledger-header">
+        <h1 className="ledger-title">Libro Contable</h1>
       </header>
 
-      {/* Contenido principal */}
-      <main className="dashboard-main">
-        {/* Columna izquierda: Formulario */}
-        <div className="dashboard-form-col">
-          <DepositForm onSubmit={handleAddDeposit} isLoading={isLoading} />
-        </div>
+      {/* Mobile: Tabs */}
+      <div className="ledger-tabs-mobile">
+        <button
+          className={`ledger-tab ${activeTab === "form" ? "active" : ""}`}
+          onClick={() => setActiveTab("form")}
+        >
+          Formulario
+        </button>
+        <button
+          className={`ledger-tab ${activeTab === "history" ? "active" : ""}`}
+          onClick={() => setActiveTab("history")}
+        >
+          Historial
+        </button>
+      </div>
 
-        {/* Columna derecha: Tabla */}
-        <div className="dashboard-table-col">
+      {/* Contenido principal */}
+      <main className="ledger-main">
+        {/* Página izquierda: Formulario */}
+        <section
+          className={`ledger-page-left ${activeTab !== "form" ? "mobile-hidden" : ""}`}
+        >
+          <DepositForm onSubmit={handleAddDeposit} isLoading={isLoading} />
+        </section>
+
+        {/* Gutter central (solo desktop) */}
+        <div className="ledger-gutter" aria-hidden="true" />
+
+        {/* Página derecha: Historial */}
+        <section
+          className={`ledger-page-right ${activeTab !== "history" ? "mobile-hidden" : ""}`}
+        >
+          <h2 className="ledger-section-title">Depósitos Ingresados</h2>
+          <p className="ledger-deposit-count">
+            {deposits.length}{" "}
+            {deposits.length === 1 ? "depósito" : "depósitos"}
+          </p>
           <DepositTable
             deposits={deposits}
             onRemove={handleRemoveDeposit}
             onClearAll={handleClearAll}
             onEdit={handleEditDeposit}
           />
-        </div>
+        </section>
       </main>
     </div>
   );

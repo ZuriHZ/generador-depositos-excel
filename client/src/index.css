@@ -3,6 +3,108 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================
+   MODERN LEDGER DESIGN TOKENS
+   Fuente: docs/disign/DESIGN.md
+   ============================================ */
+
+@layer base {
+  :root {
+    /* === Brand Colors === */
+    --color-ink-blue: #0B2545;
+    --color-paper-cream: #F7F4EC;
+    --color-id-green: #1F7A5C;
+    --color-seal-amber: #C68A2E;
+    --color-steel-blue: #3E6D9C;
+    --color-ink-red: #A13D3D;
+
+    /* === Surface Palette (Material Design 3) === */
+    --color-surface: #fcf9f1;
+    --color-surface-dim: #dcdad2;
+    --color-surface-bright: #fcf9f1;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #f6f3eb;
+    --color-surface-container: #f1eee6;
+    --color-surface-container-high: #ebe8e0;
+    --color-surface-container-highest: #e5e2da;
+    --color-on-surface: #1c1c17;
+    --color-on-surface-variant: #44474e;
+    --color-inverse-surface: #31312b;
+    --color-inverse-on-surface: #f3f1e9;
+    --color-outline: #74777f;
+    --color-outline-variant: #c4c6cf;
+
+    /* === Semantic Colors === */
+    --color-primary: #001026;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #0b2545;
+    --color-on-primary-container: #778db2;
+    --color-secondary: #036c4f;
+    --color-on-secondary: #ffffff;
+    --color-secondary-container: #9ef4cf;
+    --color-on-secondary-container: #127255;
+    --color-tertiary: #190d00;
+    --color-on-tertiary: #ffffff;
+    --color-tertiary-container: #362000;
+    --color-on-tertiary-container: #ba8024;
+    --color-error: #ba1a1a;
+    --color-on-error: #ffffff;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+
+    /* === Typography === */
+    --font-serif: "Source Serif 4", "Georgia", serif;
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+    /* === Font Sizes (from DESIGN.md) === */
+    --text-headline-lg: 2.5rem;
+    --text-headline-md: 1.75rem;
+    --text-headline-sm: 1.25rem;
+    --text-total-display: 3rem;
+    --text-body-lg: 1.125rem;
+    --text-body-md: 1rem;
+    --text-label-caps: 0.75rem;
+    --text-numeric-data: 0.9375rem;
+    --text-numeric-input: 1.5rem;
+
+    /* === Font Weights === */
+    --weight-regular: 400;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+
+    /* === Line Heights === */
+    --leading-headline-lg: 3rem;
+    --leading-headline-md: 2.25rem;
+    --leading-headline-sm: 1.75rem;
+    --leading-total-display: 3.5rem;
+    --leading-body-lg: 1.75rem;
+    --leading-body-md: 1.5rem;
+    --leading-label-caps: 1rem;
+    --leading-numeric-data: 1.25rem;
+    --leading-numeric-input: 2rem;
+
+    /* === Letter Spacing === */
+    --tracking-headline: -0.02em;
+    --tracking-label-caps: 0.05em;
+
+    /* === Border Radius === */
+    --radius-sm: 0.125rem;
+    --radius-DEFAULT: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-full: 9999px;
+
+    /* === Spacing === */
+    --spacing-unit: 4px;
+    --spacing-gutter: 24px;
+    --spacing-margin-mobile: 16px;
+    --spacing-margin-desktop: 48px;
+    --spacing-column-gap: 32px;
+  }
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -40,6 +142,38 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* === Modern Ledger Colors === */
+  --color-ink-blue: #0B2545;
+  --color-paper-cream: #F7F4EC;
+  --color-id-green: #1F7A5C;
+  --color-seal-amber: #C68A2E;
+  --color-steel-blue: #3E6D9C;
+  --color-ink-red: #A13D3D;
+
+  /* === Surface Colors === */
+  --color-surface: #fcf9f1;
+  --color-surface-dim: #dcdad2;
+  --color-surface-bright: #fcf9f1;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f6f3eb;
+  --color-surface-container: #f1eee6;
+  --color-surface-container-high: #ebe8e0;
+  --color-surface-container-highest: #e5e2da;
+  --color-on-surface: #1c1c17;
+  --color-on-surface-variant: #44474e;
+
+  /* === Typography === */
+  --font-serif: "Source Serif 4", "Georgia", serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* === Border Radius (from DESIGN.md) === */
+  --radius-sm: 0.125rem;
+  --radius-DEFAULT: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
 }
 
 :root {
@@ -81,8 +215,9 @@
 
 /* Tipografía corporativa */
 :root {
-  --font-poppins: "Poppins", sans-serif;
+  --font-poppins: "Source Serif 4", "Georgia", serif;
   --font-inter: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
 /* Tema oscuro deshabilitado para esta aplicación - se utiliza tema claro corporativo */
@@ -1098,10 +1233,10 @@
     overflow-x: auto;
     flex: 1;
     min-height: 0;
-    background: oklch(100% 0 0);
-    border: 1px solid oklch(92% 0.01 250);
-    border-radius: 1rem;
-    box-shadow: 0 4px 15px oklch(0% 0 0 / 0.01);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .refined-table {
@@ -1168,5 +1303,960 @@
 
   .loader-pulse {
     animation: loaderPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* ============================================
+     LEDGER LAYOUT - Modern Ledger "Libro Contable"
+     ============================================ */
+
+  /* Page container */
+  .ledger-page {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-paper-cream);
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 31px,
+      rgba(0, 0, 0, 0.04) 31px,
+      rgba(0, 0, 0, 0.04) 32px
+    );
+    font-family: var(--font-sans);
+  }
+
+  /* Header */
+  .ledger-header {
+    text-align: center;
+    padding: 32px 16px 16px;
+  }
+
+  .ledger-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-headline-lg);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-headline-lg);
+    letter-spacing: var(--tracking-headline);
+    color: var(--color-ink-blue);
+  }
+
+  /* Tabs mobile */
+  .ledger-tabs-mobile {
+    display: none;
+    border-bottom: 1px solid var(--color-outline-variant);
+    padding: 0 16px;
+  }
+
+  .ledger-tab {
+    flex: 1;
+    padding: 12px 0;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    font-weight: var(--weight-regular);
+    color: var(--color-on-surface-variant);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .ledger-tab.active {
+    color: var(--color-steel-blue);
+    border-bottom-color: var(--color-steel-blue);
+    font-weight: var(--weight-bold);
+  }
+
+  /* Main content */
+  /* Main content */
+  .ledger-main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Left page - Form */
+  .ledger-page-left {
+    width: 400px;
+    min-width: 400px;
+    padding: 32px var(--spacing-margin-desktop);
+    border-right: none;
+  }
+
+  /* Gutter - Book fold effect */
+  .ledger-gutter {
+    width: 2px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .ledger-gutter::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.08),
+      rgba(0, 0, 0, 0.02) 40%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.02) 60%,
+      rgba(0, 0, 0, 0.08)
+    );
+    width: 24px;
+    left: -12px;
+  }
+
+  .ledger-gutter::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(0, 0, 0, 0.12) 20%,
+      rgba(0, 0, 0, 0.12) 80%,
+      transparent
+    );
+  }
+
+  /* Right page - History */
+  .ledger-page-right {
+    flex: 1;
+    padding: 32px var(--spacing-margin-desktop);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Section titles */
+  .ledger-section-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-headline-md);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-headline-md);
+    color: var(--color-ink-blue);
+    margin-bottom: 8px;
+  }
+
+  .ledger-deposit-count {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    color: var(--color-on-surface-variant);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  /* Form card wrapper */
+  .ledger-form-card {
+    /* No background - blends with page */
+  }
+
+  /* Table wrapper */
+  .ledger-table-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: 0.5rem;
+  }
+
+  /* Stamp container - fixed at top, no scroll */
+  .ledger-stamp-container {
+    flex-shrink: 0;
+  }
+
+  /* Scrollable area for table/cards */
+  .ledger-scroll-area {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Actions mobile */
+  .ledger-actions-mobile {
+    display: none;
+  }
+
+  /* ============================================
+     FORM - Nuevo Depósito (Modern Ledger)
+     ============================================ */
+
+  /* Form container */
+  .ledger-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Form field */
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .form-field label {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    font-weight: var(--weight-regular);
+    color: var(--color-on-surface);
+  }
+
+  .form-field label .required {
+    color: var(--color-ink-red);
+    margin-left: 2px;
+  }
+
+  /* Input style - bottom line only */
+  .form-field input,
+  .form-field select {
+    width: 100%;
+    padding: 8px 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    color: var(--color-on-surface);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-outline-variant);
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-field input:focus,
+  .form-field select:focus {
+    border-bottom-color: var(--color-steel-blue);
+    border-bottom-width: 2px;
+  }
+
+  .form-field input::placeholder {
+    color: var(--color-on-surface-variant);
+    opacity: 0.5;
+  }
+
+  /* Numeric input (Monto) */
+  .form-field input[type="number"] {
+    font-family: var(--font-mono);
+    font-size: var(--text-numeric-input);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.01em;
+  }
+
+  /* Select */
+  .form-field select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2344474e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+  }
+
+  /* Date field wrapper */
+  .date-field-wrapper {
+    position: relative;
+  }
+
+  .date-field-wrapper input[type="date"] {
+    width: 100%;
+    padding-right: 32px;
+  }
+
+  /* Hide native date picker icon */
+  .date-field-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .date-field-wrapper input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0;
+  }
+
+  /* Custom date icon */
+  .date-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-ink-blue);
+    pointer-events: none;
+    cursor: pointer;
+  }
+
+  /* Submit button - double border style */
+  .ledger-submit-btn {
+    width: 100%;
+    padding: 14px 24px;
+    margin-top: 8px;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: var(--color-ink-blue);
+    border: 2px solid var(--color-ink-blue);
+    border-radius: var(--radius-DEFAULT);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+  }
+
+  /* Inner border effect */
+  .ledger-submit-btn::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: calc(var(--radius-DEFAULT) - 2px);
+    pointer-events: none;
+  }
+
+  .ledger-submit-btn:hover {
+    background-color: #091d3a;
+    border-color: #091d3a;
+  }
+
+  .ledger-submit-btn:active {
+    transform: translateY(1px);
+  }
+
+  .ledger-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Error state */
+  .form-field .field-error {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-ink-red);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 1023px) {
+    .form-field input[type="number"] {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+/* ============================================
+   RESPONSIVE - Mobile Layout
+   ============================================ */
+@media (max-width: 1023px) {
+  .ledger-tabs-mobile {
+    display: flex;
+    gap: 0;
+  }
+
+  .ledger-main {
+    flex-direction: column;
+  }
+
+  .ledger-gutter {
+    display: none;
+  }
+
+  .ledger-page-left,
+  .ledger-page-right {
+    width: 100%;
+    min-width: 100%;
+    padding: 24px 16px;
+  }
+
+  .ledger-page-left.mobile-hidden,
+  .ledger-page-right.mobile-hidden {
+    display: none;
+  }
+
+  .ledger-title {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
+
+  .ledger-actions-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+}
+
+/* ============================================
+   TABLE - Depósitos Ingresados (Modern Ledger)
+   ============================================ */
+
+/* Table header */
+.ledger-table-header {
+  display: grid;
+  grid-template-columns: 100px 100px 1fr 120px 140px 100px 100px 80px;
+  gap: 8px;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: var(--text-label-caps);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label-caps);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+  border-bottom: 2px solid var(--color-outline-variant);
+}
+
+/* Table row */
+.ledger-table-row {
+  display: grid;
+  grid-template-columns: 100px 100px 1fr 120px 140px 100px 100px 80px;
+  gap: 8px;
+  padding: 12px 12px;
+  position: relative;
+  align-items: center;
+  border-bottom: 1px solid var(--color-outline-variant);
+  transition: background-color 0.15s ease;
+}
+
+/* Zebra striping */
+.ledger-table-row:nth-child(even) {
+  background-color: var(--color-surface-container-lowest);
+}
+
+.ledger-table-row:nth-child(odd) {
+  background-color: var(--color-paper-cream);
+}
+
+.ledger-table-row:hover {
+  background-color: var(--color-surface-container-low);
+}
+
+/* Color strip indicator (left side) */
+.ledger-table-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  border-radius: 2px;
+}
+
+.ledger-table-row[data-type="efectivo"]::before {
+  background-color: var(--color-id-green);
+}
+
+.ledger-table-row[data-type="cheque"]::before {
+  background-color: var(--color-seal-amber);
+}
+
+.ledger-table-row[data-type="transferencia"]::before {
+  background-color: var(--color-steel-blue);
+}
+
+.ledger-table-row[data-type="deposito-automatico"]::before {
+  background-color: var(--color-ink-blue);
+}
+
+/* Cell styles */
+.ledger-table-cell {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  color: var(--color-on-surface);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mono cells (amounts, account numbers) */
+.ledger-table-cell.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-numeric-data);
+  font-weight: var(--weight-medium);
+  text-align: right;
+}
+
+.ledger-table-cell.amount {
+  font-family: var(--font-mono);
+  font-size: var(--text-numeric-data);
+  font-weight: var(--weight-medium);
+  text-align: right;
+  color: var(--color-on-surface);
+}
+
+/* Client name */
+.ledger-table-cell.client {
+  font-weight: var(--weight-bold);
+}
+
+/* Badge pill */
+.ledger-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: var(--weight-bold);
+  color: #ffffff;
+  background-color: var(--color-primary-container);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.ledger-badge.efectivo {
+  background-color: var(--color-id-green);
+}
+
+.ledger-badge.cheque {
+  background-color: var(--color-seal-amber);
+}
+
+.ledger-badge.transferencia {
+  background-color: var(--color-steel-blue);
+}
+
+.ledger-badge.deposito-automatico {
+  background-color: var(--color-ink-blue);
+}
+
+/* Action buttons */
+.ledger-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ledger-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-DEFAULT);
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  transition: all 0.15s ease;
+}
+
+.ledger-action-btn:hover {
+  color: var(--color-on-surface);
+  background-color: var(--color-surface-container-high);
+  border-color: var(--color-outline-variant);
+}
+
+.ledger-action-btn.delete:hover {
+  color: var(--color-ink-red);
+  background-color: var(--color-error-container);
+  border-color: var(--color-ink-red);
+}
+
+/* Empty state */
+.ledger-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-on-surface-variant);
+}
+
+.ledger-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: var(--color-outline);
+}
+
+.ledger-empty-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-headline-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-on-surface);
+  margin-bottom: 8px;
+}
+
+.ledger-empty-text {
+  font-size: var(--text-body-md);
+}
+
+/* Pagination */
+.ledger-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 0;
+}
+
+.ledger-pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  background: none;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-DEFAULT);
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  transition: all 0.15s ease;
+}
+
+.ledger-pagination-btn:hover:not(:disabled) {
+  background-color: var(--color-surface-container-high);
+  border-color: var(--color-outline);
+}
+
+.ledger-pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ledger-pagination-btn.active {
+  background-color: var(--color-ink-blue);
+  border-color: var(--color-ink-blue);
+  color: #ffffff;
+}
+
+/* ============================================
+   TOTAL STAMP - "Sello del Total"
+   ============================================ */
+
+.total-stamp {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0 24px;
+}
+
+.total-stamp-inner {
+  position: relative;
+  padding: 20px 32px;
+  border: 3px solid var(--color-seal-amber);
+  border-radius: 4px;
+  transform: rotate(-2deg);
+  background-color: rgba(252, 249, 241, 0.8);
+}
+
+/* Double border effect */
+.total-stamp-inner::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--color-seal-amber);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Flourish corners */
+.total-stamp-flourish {
+  position: absolute;
+  color: var(--color-seal-amber);
+  opacity: 0.6;
+}
+
+.total-stamp-flourish.top-left {
+  top: -8px;
+  left: -8px;
+}
+
+.total-stamp-flourish.top-right {
+  top: -8px;
+  right: -8px;
+  transform: scaleX(-1);
+}
+
+.total-stamp-flourish.bottom-left {
+  bottom: -8px;
+  left: -8px;
+  transform: scaleY(-1);
+}
+
+.total-stamp-flourish.bottom-right {
+  bottom: -8px;
+  right: -8px;
+  transform: scale(-1, -1);
+}
+
+.total-stamp-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.total-stamp-label {
+  font-family: var(--font-serif);
+  font-size: var(--text-headline-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink-blue);
+}
+
+.total-stamp-amount {
+  font-family: var(--font-serif);
+  font-size: var(--text-total-display);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-total-display);
+  letter-spacing: var(--tracking-headline);
+  color: var(--color-ink-blue);
+}
+
+.total-stamp-count {
+  font-family: var(--font-sans);
+  font-size: var(--text-label-caps);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label-caps);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+  margin-top: 4px;
+}
+
+/* ============================================
+   BUTTONS - Export & Clear
+   ============================================ */
+
+.ledger-bottom-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  padding: 16px 0;
+  flex-shrink: 0;
+}
+
+/* Export button - green double border */
+.ledger-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  font-weight: var(--weight-bold);
+  color: #ffffff;
+  background-color: var(--color-id-green);
+  border: 2px solid var(--color-id-green);
+  border-radius: var(--radius-DEFAULT);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.ledger-export-btn::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: calc(var(--radius-DEFAULT) - 2px);
+  pointer-events: none;
+}
+
+.ledger-export-btn:hover {
+  background-color: #1a6b4f;
+  border-color: #1a6b4f;
+}
+
+.ledger-export-btn:active {
+  transform: translateY(1px);
+}
+
+/* Clear button - ghost red */
+.ledger-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  font-weight: var(--weight-bold);
+  color: var(--color-ink-red);
+  background: none;
+  border: 1px solid var(--color-ink-red);
+  border-radius: var(--radius-DEFAULT);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ledger-clear-btn:hover {
+  background-color: var(--color-error-container);
+}
+
+.ledger-clear-btn:active {
+  transform: translateY(1px);
+}
+
+/* ============================================
+   MOBILE CARDS - Deposit Cards
+   ============================================ */
+
+/* Desktop: ocultar cards, mostrar tabla */
+.deposit-cards-container {
+  display: none;
+}
+
+/* Mobile: ocultar tabla, mostrar cards */
+@media (max-width: 1023px) {
+  /* Ocultar tabla desktop */
+  .refined-table-container {
+    display: none;
+  }
+
+  /* Mostrar cards */
+  .deposit-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* Deposit card */
+.deposit-card {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  position: relative;
+}
+
+/* Card color indicator */
+.deposit-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 2px;
+}
+
+.deposit-card[data-type="efectivo"]::before {
+  background-color: var(--color-id-green);
+}
+
+.deposit-card[data-type="cheque"]::before {
+  background-color: var(--color-seal-amber);
+}
+
+.deposit-card[data-type="transferencia"]::before {
+  background-color: var(--color-steel-blue);
+}
+
+.deposit-card[data-type="deposito-automatico"]::before {
+  background-color: var(--color-ink-blue);
+}
+
+/* Card header */
+.deposit-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-left: 12px;
+}
+
+/* Card actions */
+.deposit-card-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Card body */
+.deposit-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 12px;
+}
+
+/* Card field */
+.deposit-card-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.deposit-card-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  color: var(--color-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.deposit-card-value {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  color: var(--color-on-surface);
+  text-align: right;
+}
+
+.deposit-card-value.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-numeric-data);
+}
+
+.deposit-card-value.amount {
+  font-family: var(--font-mono);
+  font-size: var(--text-numeric-data);
+  font-weight: var(--weight-semibold);
+  color: var(--color-id-green);
+}
+
+/* ============================================
+   MOBILE BOTTOM ACTIONS
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .ledger-bottom-actions {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .ledger-export-btn,
+  .ledger-clear-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================
+   MOBILE TOTAL STAMP
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .total-stamp {
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .total-stamp-amount {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
+}
+
+/* ============================================
+   MOBILE FORM ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 1023px) {
+  .ledger-form {
+    gap: 20px;
+  }
+
+  .form-field input[type="number"] {
+    font-size: 1.25rem;
   }
 }
