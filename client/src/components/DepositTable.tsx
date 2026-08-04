@@ -100,7 +100,7 @@ export default function DepositTable({
   return (
     <div
       className="dashboard-card"
-      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
+      style={{ display: "flex", flexDirection: "column", gap: "2rem", height: "100%" }}
     >
       {/* Encabezado con estadísticas */}
       <div

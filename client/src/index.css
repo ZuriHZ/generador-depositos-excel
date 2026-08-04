@@ -933,8 +933,8 @@
      Dashboard Page — frontend-design skill aesthetics
      ============================================ */
   .dashboard-page {
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100dvh;
+    overflow: hidden;
     background: oklch(98% 0.005 250);
     font-family: "Plus Jakarta Sans", sans-serif;
     color: oklch(20% 0.02 250);
@@ -1023,20 +1023,23 @@
 
   .dashboard-main {
     flex: 1;
+    overflow: hidden;
+    min-height: 0;
     padding: clamp(1.5rem);
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
     gap: clamp(1.5rem, 4vw, 3rem);
     animation: loginFadeSlideUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
-    align-items: flex-start;
   }
 
   @media (min-width: 1024px) {
     .dashboard-main {
       grid-template-columns: 380px 1fr;
+      grid-template-rows: 1fr;
     }
   }
 
@@ -1044,6 +1047,23 @@
     .dashboard-main {
       grid-template-columns: 420px 1fr;
     }
+  }
+
+  .dashboard-form-col {
+    min-height: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .dashboard-form-col {
+      overflow-y: auto;
+    }
+  }
+
+  .dashboard-table-col {
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .dashboard-card {
@@ -1074,7 +1094,10 @@
   /* ---- Table aesthetics ---- */
   .refined-table-container {
     width: 100%;
+    overflow-y: auto;
     overflow-x: auto;
+    flex: 1;
+    min-height: 0;
     background: oklch(100% 0 0);
     border: 1px solid oklch(92% 0.01 250);
     border-radius: 1rem;
