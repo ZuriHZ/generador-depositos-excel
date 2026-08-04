@@ -1,7 +1,7 @@
-import { useState, useCallback, useEffect } from "react";
-import { trpc } from "@/lib/trpc";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 
 export interface Deposit {
   id: number;

@@ -1,0 +1,26 @@
+# Render Blueprint — Generador de Depósitos Excel
+# Más info: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: generador-depositos-excel
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: VITE_APP_ID
+        value: generador-depositos
+      # -- Estas tres se configuran manualmente en el dashboard de Render --
+      - key: DATABASE_URL
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: VITE_CLERK_PUBLISHABLE_KEY
+        sync: false

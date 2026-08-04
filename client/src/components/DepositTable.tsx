@@ -1,12 +1,17 @@
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit2,
+  FileDown,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
-import { Deposit, DepositFormData } from "@/hooks/useDepositsWithDB";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Trash2, FileDown, Edit2 } from "lucide-react";
-import { exportDepositsToExcel } from "@/lib/excelExporter";
 import { toast } from "sonner";
-import EditDepositModal from "@/components/EditDepositModal";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
+import EditDepositModal from "@/components/EditDepositModal";
+import { TotalStamp } from "@/components/TotalStamp";
+import { Deposit, DepositFormData } from "@/hooks/useDepositsWithDB";
+import { exportDepositsToExcel } from "@/lib/excelExporter";
 
 interface DepositTableProps {
   deposits: Deposit[];
@@ -42,6 +47,8 @@ const getDepositTypeLabel = (type: string) => {
   return labels[type] || type;
 };
 
+const ITEMS_PER_PAGE = 10;
+
 export default function DepositTable({
   deposits,
   onRemove,
@@ -53,6 +60,13 @@ export default function DepositTable({
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [deletingDeposit, setDeletingDeposit] = useState<Deposit | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(deposits.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentDeposits = deposits.slice(startIndex, endIndex);
+
   const handleExport = async () => {
     try {
       const filename = `depositos-${new Date().toISOString().split("T")[0]}.xlsx`;
@@ -98,265 +112,197 @@ export default function DepositTable({
   const totalAmount = deposits.reduce((sum, deposit) => sum + deposit.monto, 0);
 
   return (
-    <div
-      className="dashboard-card"
-      style={{ display: "flex", flexDirection: "column", gap: "2rem", height: "100%" }}
-    >
-      {/* Encabezado con estadísticas */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <h2 className="dashboard-section-title" style={{ margin: 0 }}>
-            Depósitos Ingresados
-          </h2>
-          <p
-            style={{
-              color: "oklch(60% 0.02 250)",
-              fontSize: "0.9375rem",
-              marginTop: "0.5rem",
-            }}
-          >
-            {deposits.length} {deposits.length === 1 ? "depósito" : "depósitos"}
-          </p>
-        </div>
-        {deposits.length > 0 && (
-          <div style={{ textAlign: "right" }}>
-            <p
-              style={{
-                color: "oklch(60% 0.02 250)",
-                fontSize: "0.875rem",
-                margin: 0,
-              }}
-            >
-              Total
-            </p>
-            <p
-              style={{
-                fontFamily: "'Fraunces', serif",
-                fontSize: "1.5rem",
-                fontWeight: 500,
-                color: "oklch(38% 0.1 250)",
-                margin: 0,
-              }}
-            >
-              {formatCurrency(totalAmount)}
-            </p>
-          </div>
-        )}
-      </div>
+    <div className="ledger-table-wrapper">
 
-      {/* Tabla o mensaje vacío */}
-      {deposits.length === 0 ? (
-        <div
-          style={{
-            padding: "4rem 2rem",
-            textAlign: "center",
-            background: "oklch(99% 0.002 250)",
-            borderRadius: "1rem",
-            border: "1px solid oklch(92% 0.01 250)",
-          }}
-        >
-          <div
-            style={{
-              width: "4rem",
-              height: "4rem",
-              margin: "0 auto 1.5rem",
-              borderRadius: "50%",
-              background: "oklch(96% 0.01 250)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "oklch(60% 0.02 250)",
-            }}
-          >
-            <FileDown size={32} />
-          </div>
-          <p
-            style={{
-              fontFamily: "'Fraunces', serif",
-              fontSize: "1.25rem",
-              color: "oklch(20% 0.02 250)",
-              margin: "0 0 0.5rem",
-            }}
-          >
-            No hay depósitos aún
-          </p>
-          <p
-            style={{
-              color: "oklch(60% 0.02 250)",
-              fontSize: "0.9375rem",
-              margin: 0,
-            }}
-          >
-            Completa el formulario para agregar depósitos
-          </p>
+      {/* Sello del Total - fixed at top */}
+      {deposits.length > 0 && (
+        <div className="ledger-stamp-container">
+          <TotalStamp
+            total={totalAmount}
+            count={deposits.length}
+            formatCurrency={formatCurrency}
+          />
         </div>
-      ) : (
-        <>
-          <div className="refined-table-container">
-            <table className="refined-table">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Número de Cuenta</th>
-                  <th>Cliente</th>
-                  <th style={{ textAlign: "right" }}>Monto</th>
-                  <th>Tipo</th>
-                  <th>Remito</th>
-                  <th>Bolsa</th>
-                  <th style={{ textAlign: "center" }}>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {deposits.map(deposit => (
-                  <tr key={deposit.id}>
-                    <td>{formatDate(deposit.fecha)}</td>
-                    <td
-                      style={{
-                        fontFamily: "monospace",
-                        color: "oklch(45% 0.02 250)",
-                      }}
-                    >
-                      {deposit.numeroCuenta}
-                    </td>
-                    <td
-                      style={{ fontWeight: 500, color: "oklch(20% 0.02 250)" }}
-                    >
-                      {deposit.nombreCliente}
-                    </td>
-                    <td
-                      style={{
-                        textAlign: "right",
-                        fontWeight: 600,
-                        color: "oklch(20% 0.02 250)",
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      }}
-                    >
-                      {formatCurrency(deposit.monto)}
-                    </td>
-                    <td>
-                      <span className="table-badge">
-                        {getDepositTypeLabel(deposit.tipoDeposito)}
-                      </span>
-                    </td>
-                    <td style={{ fontSize: "0.8125rem" }}>
-                      {deposit.remito || "—"}
-                    </td>
-                    <td style={{ fontSize: "0.8125rem" }}>
-                      {deposit.numeroBolsa || "—"}
-                    </td>
-                    <td>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "0.5rem",
-                        }}
-                      >
-                        <button
-                          onClick={() => handleEditClick(deposit)}
-                          title="Editar depósito"
-                          style={{
-                            padding: "0.5rem",
-                            color: "oklch(45% 0.02 250)",
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                            borderRadius: "0.375rem",
-                            transition: "all 150ms",
-                          }}
-                          onMouseOver={e => (
-                            (e.currentTarget.style.background =
-                              "oklch(96% 0.01 250)"),
-                            (e.currentTarget.style.color =
-                              "oklch(20% 0.02 250)")
-                          )}
-                          onMouseOut={e => (
-                            (e.currentTarget.style.background = "transparent"),
-                            (e.currentTarget.style.color =
-                              "oklch(45% 0.02 250)")
-                          )}
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(deposit)}
-                          title="Eliminar depósito"
-                          style={{
-                            padding: "0.5rem",
-                            color: "var(--destructive)",
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                            borderRadius: "0.375rem",
-                            transition: "all 150ms",
-                          }}
-                          onMouseOver={e =>
-                            (e.currentTarget.style.background =
-                              "color-mix(in srgb, var(--destructive) 10%, transparent)")
-                          }
-                          onMouseOut={e =>
-                            (e.currentTarget.style.background = "transparent")
-                          }
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Botones de acción */}
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <button
-              onClick={handleExport}
-              className="login-submit-btn"
-              style={{ flex: 1, padding: "0 1.5rem" }}
-            >
-              <FileDown size={18} />
-              <span>Generar Excel</span>
-            </button>
-            <button
-              onClick={onClearAll}
-              style={{
-                flex: 1,
-                padding: "0 1.5rem",
-                height: "3rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "0.5rem",
-                fontSize: "0.9375rem",
-                fontWeight: 600,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                color: "oklch(40% 0.02 250)",
-                background: "transparent",
-                border: "1.5px solid oklch(88% 0.015 250)",
-                borderRadius: "0.625rem",
-                cursor: "pointer",
-                transition: "all 200ms ease",
-              }}
-              onMouseOver={e =>
-                (e.currentTarget.style.background = "oklch(96% 0.01 250)")
-              }
-              onMouseOut={e =>
-                (e.currentTarget.style.background = "transparent")
-              }
-            >
-              Limpiar Todo
-            </button>
-          </div>
-        </>
       )}
+
+      {/* Scrollable content area */}
+      <div className="ledger-scroll-area">
+        {/* Tabla o mensaje vacío */}
+        {deposits.length === 0 ? (
+          <div className="ledger-empty">
+            <div className="ledger-empty-icon">
+              <FileDown size={48} />
+            </div>
+            <p className="ledger-empty-title">No hay depósitos aún</p>
+            <p className="ledger-empty-text">Completa el formulario para agregar depósitos</p>
+          </div>
+        ) : (
+          <>
+            {/* Desktop: Tabla */}
+            <div className="refined-table-container">
+            {/* Header */}
+            <div className="ledger-table-header">
+              <div>Fecha</div>
+              <div>Número de Cuenta</div>
+              <div>Cliente</div>
+              <div style={{ textAlign: "right" }}>Monto</div>
+              <div>Tipo</div>
+              <div>Remito</div>
+              <div>Bolsa</div>
+              <div style={{ textAlign: "center" }}>Acciones</div>
+            </div>
+
+            {/* Rows */}
+            {currentDeposits.map(deposit => (
+              <div
+                key={deposit.id}
+                className="ledger-table-row"
+                data-type={deposit.tipoDeposito}
+              >
+                <div className="ledger-table-cell">{formatDate(deposit.fecha)}</div>
+                <div className="ledger-table-cell mono">{deposit.numeroCuenta}</div>
+                <div className="ledger-table-cell client">{deposit.nombreCliente}</div>
+                <div className="ledger-table-cell amount">{formatCurrency(deposit.monto)}</div>
+                <div>
+                  <span className={`ledger-badge ${deposit.tipoDeposito}`}>
+                    {getDepositTypeLabel(deposit.tipoDeposito)}
+                  </span>
+                </div>
+                <div className="ledger-table-cell">{deposit.remito || "—"}</div>
+                <div className="ledger-table-cell">{deposit.numeroBolsa || "—"}</div>
+                <div className="ledger-actions">
+                  <button
+                    className="ledger-action-btn"
+                    onClick={() => handleEditClick(deposit)}
+                    title="Editar depósito"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                  <button
+                    className="ledger-action-btn delete"
+                    onClick={() => handleDeleteClick(deposit)}
+                    title="Eliminar depósito"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile: Cards */}
+          <div className="deposit-cards-container">
+            {currentDeposits.map(deposit => (
+              <div
+                key={deposit.id}
+                className="deposit-card"
+                data-type={deposit.tipoDeposito}
+              >
+                <div className="deposit-card-header">
+                  <span className={`ledger-badge ${deposit.tipoDeposito}`}>
+                    {getDepositTypeLabel(deposit.tipoDeposito)}
+                  </span>
+                  <div className="deposit-card-actions">
+                    <button
+                      className="ledger-action-btn"
+                      onClick={() => handleEditClick(deposit)}
+                      title="Editar depósito"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button
+                      className="ledger-action-btn delete"
+                      onClick={() => handleDeleteClick(deposit)}
+                      title="Eliminar depósito"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+                <div className="deposit-card-body">
+                  <div className="deposit-card-field">
+                    <span className="deposit-card-label">Fecha:</span>
+                    <span className="deposit-card-value">{formatDate(deposit.fecha)}</span>
+                  </div>
+                  <div className="deposit-card-field">
+                    <span className="deposit-card-label">N° Cuenta:</span>
+                    <span className="deposit-card-value mono">{deposit.numeroCuenta}</span>
+                  </div>
+                  <div className="deposit-card-field">
+                    <span className="deposit-card-label">Cliente:</span>
+                    <span className="deposit-card-value">{deposit.nombreCliente}</span>
+                  </div>
+                  <div className="deposit-card-field">
+                    <span className="deposit-card-label">Monto:</span>
+                    <span className="deposit-card-value amount">{formatCurrency(deposit.monto)}</span>
+                  </div>
+                  {deposit.remito && (
+                    <div className="deposit-card-field">
+                      <span className="deposit-card-label">Remito:</span>
+                      <span className="deposit-card-value mono">{deposit.remito}</span>
+                    </div>
+                  )}
+                  {deposit.numeroBolsa && (
+                    <div className="deposit-card-field">
+                      <span className="deposit-card-label">Bolsa:</span>
+                      <span className="deposit-card-value mono">{deposit.numeroBolsa}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+           </div>
+          </>
+        )}
+        </div>
+
+      {/* Paginación - fixed at bottom */}
+      {totalPages > 1 && (
+        <div className="ledger-pagination">
+          <button
+            className="ledger-pagination-btn"
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft size={16} />
+          </button>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            <button
+              key={page}
+              className={`ledger-pagination-btn ${currentPage === page ? 'active' : ''}`}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </button>
+          ))}
+          
+          <button
+            className="ledger-pagination-btn"
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
+
+      {/* Botones de acción inferiores - fixed at bottom */}
+      <div className="ledger-bottom-actions">
+        <button
+          onClick={handleExport}
+          className="ledger-export-btn"
+        >
+          <FileDown size={18} />
+          <span>Generar Excel</span>
+        </button>
+        <button
+          onClick={onClearAll}
+          className="ledger-clear-btn"
+        >
+          Limpiar Todo
+        </button>
+      </div>
 
       {/* Modal de edición */}
       <EditDepositModal
