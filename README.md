@@ -1,6 +1,6 @@
-# 📊 Generador de Depósitos Excel
+# 📊 Generador de Depósitos Excel — Libro Contable
 
-Aplicación fullstack para gestión profesional de depósitos bancarios con exportación a Excel, formularios validados y seguridad JWT — construida con React 19, tRPC, Drizzle ORM y PostgreSQL.
+Aplicación fullstack para gestión profesional de depósitos bancarios con exportación a Excel, formularios validados y autenticación con Clerk — construida con React 19, tRPC, Drizzle ORM y PostgreSQL (Neon).
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss)
@@ -16,12 +16,27 @@ Aplicación fullstack para gestión profesional de depósitos bancarios con expo
 
 Este proyecto fue **generado inicialmente con Manus AI** como base de partida, y posteriormente **personalizado profundamente** con mejoras propias:
 
-- 🔧 **Arquitectura**: Migración a monorepo con separación clara client/server/shared
-- 🔐 **Seguridad**: Autenticación profesional con Clerk (UI segura, prevención de bots)
+- 🔐 **Autenticación**: Migración completa a **Clerk** con login custom email/password (reemplaza JWT + bcrypt)
+- 🗄️ **Base de datos**: **Neon PostgreSQL** con SSL validado, schema con `clerkId`
+- 🎨 **Diseño**: Rediseño total **"Libro Contable" — Modern Ledger** (estética papel contable vintage)
 - 📊 **Exportación Excel**: Generación de XLSX con formato profesional
-- 🎨 **UI/UX**: Shadcn/UI + Tailwind CSS v4 + Framer Motion
 - ✅ **Validación**: Zod para schemas compartidos client/server
-- 🗄️ **Base de datos**: Drizzle ORM con PostgreSQL (Neon Serverless)
+
+---
+
+## 🎨 Diseño: Libro Contable (Modern Ledger)
+
+El rediseño actual implementa una estética de **libro contable clásico**:
+
+- 📖 **Layout dos páginas** con gutter central tipo pliegue de libro
+- 📄 Fondo **paper-cream** con líneas sutiles tipo papel rayado
+- ✏️ Formulario con inputs de **solo línea inferior** y date icon SVG custom
+- 🦓 Tabla con **zebra-striping**, franjas de color por tipo y badges pill
+- 🏛️ **Sello del total** ornamentado con borde doble y flourish SVG (`TotalStamp`)
+- 🔲 Botones de borde doble (Generar Excel verde, Limpiar Todo ghost rojo)
+- 📱 Mobile: tabs **Formulario/Historial** + cards individuales
+- 🔤 Google Fonts: **Source Serif 4** (display), **Inter** (texto), **JetBrains Mono** (números)
+- 🎛️ Tokens CSS centralizados (colores, tipografía, spacing, radius)
 
 ---
 
@@ -35,12 +50,12 @@ Este proyecto fue **generado inicialmente con Manus AI** como base de partida, y
                         │ tRPC (HTTP)
 ┌───────────────────────▼─────────────────────────────────┐
 │                      SERVER (Express + tRPC)             │
-│  Middleware Auth → Router → Controllers → Drizzle ORM    │
+│  Middleware Clerk → Router → Controllers → Drizzle ORM   │
 └───────────────────────┬─────────────────────────────────┘
                         │
 ┌───────────────────────▼─────────────────────────────────┐
 │               DATABASE (PostgreSQL - Neon)               │
-│  users (datos) + deposits (datos financieros)            │
+│  users (auth Clerk) + deposits (datos financieros)       │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -48,12 +63,12 @@ Este proyecto fue **generado inicialmente con Manus AI** como base de partida, y
 ```
 ├── client/           # Frontend React 19
 ├── server/           # Backend Express + tRPC
-│   ├── _core/       # Middleware, context, config
+│   ├── _core/       # Middleware Clerk, context, config
 │   ├── db.ts        # Database operations
 │   └── routers.ts   # tRPC routers
 ├── shared/           # Tipos y constantes compartidos
 ├── drizzle/          # Schema y migraciones DB
-├── api/              # API routes
+├── api/              # API routes (legacy serverless)
 └── scripts/          # Utilidades de build
 ```
 
@@ -66,28 +81,29 @@ Este proyecto fue **generado inicialmente con Manus AI** como base de partida, y
 |------------|---------|-----------|
 | React | 19.2 | UI Library |
 | Vite | 7.3 | Build tool |
-| Tailwind CSS | 4.2 | Utility-first CSS |
+| Tailwind CSS | 4.3 | Utility-first CSS |
 | Shadcn/UI | - | Component library |
-| tRPC Client | 11.10 | Type-safe API |
-| React Query | 5.90 | Server state |
-| Framer Motion | 12.34 | Animaciones |
+| tRPC Client | 11.18 | Type-safe API |
+| React Query | 5.10 | Server state |
+| Framer Motion | 12.4 | Animaciones |
 | Wouter | 3.7 | Routing |
-| Zod | 4.3 | Validación |
+| React Hook Form | 7.8 | Formularios |
+| Zod | 4.4 | Validación |
 
 ### Backend
 | Tecnología | Versión | Propósito |
 |------------|---------|-----------|
 | Express | 4.22 | HTTP server |
-| tRPC Server | 11.10 | Type-safe API |
+| tRPC Server | 11.18 | Type-safe API |
 | Drizzle ORM | 0.45 | Database ORM |
-| PostgreSQL | - | Database |
-| Clerk SDK | 2.1 | Autenticación |
-| Zod | 4.3 | Validación |
+| PostgreSQL | - | Database (Neon) |
+| Clerk (`@clerk/express`) | 2.1 | Autenticación |
+| Zod | 4.4 | Validación |
 
 ### Base de Datos
 | Tabla | Descripción |
 |-------|-------------|
-| `users` | Usuarios con auth, roles (admin/user), timestamps |
+| `users` | Usuarios con `clerkId`, roles (admin/user), timestamps |
 | `deposits` | Depósitos bancarios con foreign key a users |
 
 ---
@@ -107,19 +123,20 @@ Este proyecto fue **generado inicialmente con Manus AI** como base de partida, y
 - Descarga directa desde el navegador
 
 ### 🔒 Seguridad
-- **Clerk**: Gestión completa del ciclo de vida de autenticación.
-- **tRPC Middleware**: Protección de rutas con `protectedProcedure` inyectando estado de Clerk.
-- **Roles**: Admin y User (configurables).
-- **Zod**: Validación de inputs en client y server.
+- **Clerk**: Gestión completa del ciclo de vida de autenticación con login custom email/password
+- **tRPC Middleware**: Protección de rutas con `protectedProcedure` inyectando estado de Clerk
+- **Roles**: Admin y User (configurables)
+- **Zod**: Validación de inputs en client y server
+- **SSL validado**: Conexión a Neon con verificación real de certificado
 
 ### 🎨 UI/UX
-- Dashboard con tabla de depósitos
+- Dashboard con tabla de depósitos (estilo libro contable)
 - Formulario con validación en tiempo real
 - Modal de edición inline
 - Dialog de confirmación para eliminar
 - Skeleton loading states
 - Dark mode
-- Responsive design
+- Responsive design (tabs en mobile)
 
 ---
 
@@ -128,8 +145,16 @@ Este proyecto fue **generado inicialmente con Manus AI** como base de partida, y
 ### Requisitos
 - Node.js 18+
 - pnpm
-- PostgreSQL (Neon)
-- Cuenta en Clerk
+- Cuenta en [Neon](https://neon.tech) (PostgreSQL serverless)
+- Cuenta en [Clerk](https://clerk.com)
+
+### Variables de Entorno
+
+```env
+DATABASE_URL=postgresql://...        # Connection string de Neon
+CLERK_SECRET_KEY=sk_test_...         # Clerk secret key (server)
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...  # Clerk publishable key (client)
+```
 
 ### Instalación
 
@@ -143,7 +168,7 @@ pnpm install
 
 # Configurar variables de entorno
 cp .env.example .env
-# Editar .env con tu DATABASE_URL (Neon) y CLERK_KEYS
+# Editar .env con DATABASE_URL, CLERK_SECRET_KEY y VITE_CLERK_PUBLISHABLE_KEY
 
 # Ejecutar migraciones de BD
 pnpm db:push
@@ -178,6 +203,8 @@ generador-depositos-excel/
 │       │   ├── DepositTable.tsx
 │       │   ├── EditDepositModal.tsx
 │       │   ├── DeleteConfirmDialog.tsx
+│       │   ├── TotalStamp.tsx
+│       │   ├── AIChatBox.tsx
 │       │   └── DashboardLayout.tsx
 │       ├── pages/
 │       │   ├── Home.tsx
@@ -185,25 +212,24 @@ generador-depositos-excel/
 │       │   └── NotFound.tsx
 │       ├── hooks/
 │       ├── contexts/
-│       └── lib/
+│       ├── _core/hooks/     # useAuth (Clerk)
+│       └── lib/             # trpc.ts, excelExporter.ts
 ├── server/                    # Backend Express + tRPC
 │   ├── _core/
 │   │   ├── index.ts          # Entry point Express
 │   │   ├── trpc.ts           # tRPC init + middleware
+│   │   ├── clerk.ts          # Config Clerk
 │   │   ├── context.ts        # Request context
-│   │   ├── cookies.ts        # Cookie helpers
-│   │   ├── env.ts            # Environment variables
-│   │   └── vite.ts           # Vite dev/prod serving
+│   │   └── env.ts            # Environment variables
 │   ├── db.ts                 # Database operations
-│   ├── routers.ts            # tRPC routers
-│   └── storage.ts            # Storage utilities
+│   └── routers.ts            # tRPC routers
 ├── shared/                    # Tipos compartidos
-│   └── const.ts              # Constantes (nombres de cookies, etc.)
+│   └── const.ts              # Constantes
 ├── drizzle/                   # Drizzle ORM
 │   ├── schema.ts             # Database schema
 │   ├── migrations/           # Migraciones generadas
 │   └── relations.ts          # Relaciones entre tablas
-├── api/                       # API routes
+├── api/index.ts               # Entry point serverless (legacy)
 ├── scripts/                   # Build scripts
 ├── drizzle.config.ts          # Config Drizzle Kit
 ├── vite.config.ts             # Config Vite
@@ -214,42 +240,16 @@ generador-depositos-excel/
 
 ---
 
-## 🔒 Seguridad
-
-### Autenticación JWT
-- Tokens generados con `jose` (librería moderna y segura)
-- Almacenados en cookies `httpOnly: true` (no accesibles via JavaScript)
-- Expiración de 1 año para sesiones activas
-- Validación automática en middleware tRPC
-
-### Hash de Contraseñas
-- Bcryptjs con salt rounds automático
-- Nunca se almacenan passwords en texto plano
-
-### Protección de Rutas
-```typescript
-// Solo usuarios autenticados
-const protectedProcedure = t.procedure.use(requireUser);
-
-// Solo administradores
-const adminProcedure = t.procedure.use(requireAdmin);
-```
-
-### Validación de Inputs
-- Zod schemas compartidos entre client y server
-- Validación automática en tRPC procedures
-- Sanitización de datos sensibles
-
----
-
 ## 📊 API Endpoints
 
-### Autenticación
+### Autenticación (Clerk)
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| `POST` | `/api/trpc/auth.login` | Iniciar sesión |
+| `POST` | `/api/trpc/auth.login` | Iniciar sesión (custom email/password) |
 | `POST` | `/api/trpc/auth.logout` | Cerrar sesión |
 | `GET` | `/api/trpc/auth.me` | Obtener usuario actual |
+
+> Soporta el flujo `needs_client_trust` de Clerk (verificación de email pendiente).
 
 ### Depósitos (autenticado)
 | Método | Ruta | Descripción |
@@ -271,54 +271,31 @@ const adminProcedure = t.procedure.use(requireAdmin);
 ### ¿Por qué Drizzle ORM?
 - **TypeScript-first**: Tipos generados del schema
 - **SQL-like**: Sintaxis cercana a SQL nativo
-- **Performance**: Más rápido que Prisma en benchmarks
 - **Migraciones**: Genera SQL migrations automáticas
 
-### ¿Por qué Zustand en lugar de Redux?
-- **Simplicidad**: Sin reducers ni actions
-- **Bundle size**: Mucho más ligero
-- **Devtools**: Soporte para Redux DevTools
+### ¿Por qué Clerk?
+- **Seguridad gestionada**: Sin implementar hash de contraseñas, sesiones ni CSRF
+- **Login custom**: Formulario propio email/password manteniendo la estética del proyecto
+- **Escalable**: Flujos de verificación de email, 2FA y OAuth listos para activar
 
-### ¿Por qué Wouter en lugar de React Router?
-- **Tamaño**: ~2KB vs ~12KB de React Router
-- **Rendimiento**: APIs más simples y rápidas
-- **Compatibilidad**: API similar a React Router
-
----
-
-## 🚀 Comandos Disponibles
-
-| Comando | Descripción |
-|---------|-------------|
-| `pnpm dev` | Desarrollo con hot reload |
-| `pnpm build` | Build de producción |
-| `pnpm start` | Iniciar en producción |
-| `pnpm check` | Type check |
-| `pnpm format` | Formatear código |
-| `pnpm test` | Ejecutar tests |
-| `pnpm db:push` | Ejecutar migraciones DB |
+### ¿Por qué Neon?
+- **PostgreSQL serverless**: Escala a cero cuando no hay tráfico
+- **SSL validado**: Conexión con verificación real de certificado
+- **Branching**: Branches de BD para desarrollo y previews
 
 ---
 
 ## 🌐 Despliegue
 
-### Vercel
-- Soporte nativo para Vercel con `vercel.json`
-- Variables de entorno: `DATABASE_URL`
-- Build: `vite build && esbuild server --bundle`
-
-### Docker
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN npm i -g pnpm && pnpm install --frozen-lockfile
-COPY . .
-RUN pnpm build
-EXPOSE 3000
-CMD ["pnpm", "start"]
-```
+### Render (Web Service)
+- **URL producción**: https://generador-depositos-excel.onrender.com/
+- **Config**: `render.yaml` (Blueprint) — Web Service con Node 22
+- **Entry point**: `server/_core/index.ts` (servidor Express)
+- **Build command**: `pnpm install --frozen-lockfile && pnpm build`
+- **Start command**: `pnpm start`
+- **Variables de entorno**: `DATABASE_URL`, `CLERK_SECRET_KEY`, `VITE_CLERK_PUBLISHABLE_KEY`
+- **Importante**: las variables `VITE_*` se inyectan al compilar el cliente; configurarlas en el dashboard de Render
 
 ---
 
-> 💡 **Construido con React 19 + tRPC + Drizzle** — Gestión financiera profesional con type safety de punta a punta.
+> 💡 **Construido con React 19 + tRPC + Drizzle + Clerk** — Gestión financiera profesional con type safety de punta a punta y estética de libro contable.
