@@ -226,10 +226,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-inter);
   }
+
   h1,
   h2,
   h3,
@@ -238,11 +240,13 @@
   h6 {
     font-family: var(--font-poppins);
   }
+
   label,
   .label {
     font-family: var(--font-poppins);
     @apply font-medium;
   }
+
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
@@ -257,6 +261,7 @@
 }
 
 @layer components {
+
   /**
    * Custom container utility that centers content and adds responsive padding.
    *
@@ -274,7 +279,8 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
+    /* 16px - mobile padding */
     padding-right: 1rem;
   }
 
@@ -306,6 +312,7 @@
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -318,16 +325,19 @@
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-left: 1.5rem;
+      /* 24px - tablet padding */
       padding-right: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding */
+      padding-left: 2rem;
+      /* 32px - desktop padding */
       padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+      max-width: 1280px;
+      /* Standard content width */
     }
   }
 
@@ -377,16 +387,12 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(
-        ellipse 80% 60% at 20% 80%,
+      radial-gradient(ellipse 80% 60% at 20% 80%,
         oklch(35% 0.12 250 / 0.5),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 60% 50% at 80% 20%,
+        transparent),
+      radial-gradient(ellipse 60% 50% at 80% 20%,
         oklch(40% 0.1 220 / 0.3),
-        transparent
-      );
+        transparent);
     pointer-events: none;
   }
 
@@ -397,14 +403,12 @@
     right: 0;
     width: 1px;
     height: 100%;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      oklch(55% 0.06 250 / 0.3) 30%,
-      oklch(65% 0.08 250 / 0.5) 50%,
-      oklch(55% 0.06 250 / 0.3) 70%,
-      transparent 100%
-    );
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        oklch(55% 0.06 250 / 0.3) 30%,
+        oklch(65% 0.08 250 / 0.5) 50%,
+        oklch(55% 0.06 250 / 0.3) 70%,
+        transparent 100%);
   }
 
   .login-brand-logo {
@@ -678,11 +682,9 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      135deg,
-      oklch(42% 0.12 250) 0%,
-      oklch(35% 0.1 240) 100%
-    );
+    background: linear-gradient(135deg,
+        oklch(42% 0.12 250) 0%,
+        oklch(35% 0.1 240) 100%);
     opacity: 0;
     transition: opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
   }
@@ -729,6 +731,7 @@
       opacity: 0;
       transform: translateY(16px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -740,6 +743,7 @@
       opacity: 0;
       transform: translateY(-12px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -748,6 +752,7 @@
 
   /* ---- Reduced Motion ---- */
   @media (prefers-reduced-motion: reduce) {
+
     .login-brand-logo,
     .login-brand-content,
     .login-brand-footer,
@@ -806,16 +811,12 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(
-        ellipse 80% 60% at 20% 80%,
+      radial-gradient(ellipse 80% 60% at 20% 80%,
         oklch(35% 0.12 250 / 0.5),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 60% 50% at 80% 20%,
+        transparent),
+      radial-gradient(ellipse 60% 50% at 80% 20%,
         oklch(40% 0.1 220 / 0.3),
-        transparent
-      );
+        transparent);
     pointer-events: none;
   }
 
@@ -826,14 +827,12 @@
     right: 0;
     width: 1px;
     height: 100%;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      oklch(55% 0.06 250 / 0.3) 30%,
-      oklch(65% 0.08 250 / 0.5) 50%,
-      oklch(55% 0.06 250 / 0.3) 70%,
-      transparent 100%
-    );
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        oklch(55% 0.06 250 / 0.3) 30%,
+        oklch(65% 0.08 250 / 0.5) 50%,
+        oklch(55% 0.06 250 / 0.3) 70%,
+        transparent 100%);
   }
 
   .unauth-brand-logo {
@@ -1045,6 +1044,7 @@
 
   /* ---- Reduced Motion (unauth) ---- */
   @media (prefers-reduced-motion: reduce) {
+
     .unauth-brand-logo,
     .unauth-brand-content,
     .unauth-brand-footer,
@@ -1288,12 +1288,14 @@
 
   /* ---- Initial Loader aesthetics ---- */
   @keyframes loaderPulse {
+
     0%,
     100% {
       opacity: 1;
       transform: scale(1);
       box-shadow: 0 0 0 0 oklch(38% 0.1 250 / 0.4);
     }
+
     50% {
       opacity: 0.8;
       transform: scale(0.95);
@@ -1316,14 +1318,20 @@
     flex-direction: column;
     overflow: hidden;
     background-color: var(--color-paper-cream);
-    background-image: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 31px,
-      rgba(0, 0, 0, 0.04) 31px,
-      rgba(0, 0, 0, 0.04) 32px
-    );
+    background-image: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 31px,
+        rgba(0, 0, 0, 0.04) 31px,
+        rgba(0, 0, 0, 0.04) 32px);
     font-family: var(--font-sans);
+    position: relative;
+  }
+
+  /* User menu - inline below form */
+  .ledger-user-menu {
+    display: flex;
+    justify-content: center;
+    padding: 16px 0 8px;
   }
 
   /* Header */
@@ -1396,14 +1404,12 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.08),
-      rgba(0, 0, 0, 0.02) 40%,
-      transparent 50%,
-      rgba(0, 0, 0, 0.02) 60%,
-      rgba(0, 0, 0, 0.08)
-    );
+    background: linear-gradient(to right,
+        rgba(0, 0, 0, 0.08),
+        rgba(0, 0, 0, 0.02) 40%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.02) 60%,
+        rgba(0, 0, 0, 0.08));
     width: 24px;
     left: -12px;
   }
@@ -1415,13 +1421,11 @@
     bottom: 0;
     left: 0;
     width: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      rgba(0, 0, 0, 0.12) 20%,
-      rgba(0, 0, 0, 0.12) 80%,
-      transparent
-    );
+    background: linear-gradient(to bottom,
+        transparent,
+        rgba(0, 0, 0, 0.12) 20%,
+        rgba(0, 0, 0, 0.12) 80%,
+        transparent);
   }
 
   /* Right page - History */
@@ -2107,6 +2111,7 @@
 
 /* Mobile: ocultar tabla, mostrar cards */
 @media (max-width: 1023px) {
+
   /* Ocultar tabla desktop */
   .refined-table-container {
     display: none;

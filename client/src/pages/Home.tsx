@@ -1,14 +1,15 @@
+import { UserButton } from "@clerk/react";
+import { DollarSign } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DepositForm from "@/components/DepositForm";
 import DepositTable from "@/components/DepositTable";
-import {
-  useDepositsWithDB,
-  DepositFormData,
-} from "@/hooks/useDepositsWithDB";
-import { toast } from "sonner";
-import { DollarSign } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import {
+  DepositFormData,
+  useDepositsWithDB,
+} from "@/hooks/useDepositsWithDB";
 
 /**
  * Página principal del Generador de Excel para Depósitos Bancarios
@@ -136,6 +137,7 @@ export default function Home() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                aria-hidden="true"
               >
                 <path d="M5 12h14" />
                 <path d="m12 5 7 7-7 7" />
@@ -228,6 +230,17 @@ export default function Home() {
           className={`ledger-page-left ${activeTab !== "form" ? "mobile-hidden" : ""}`}
         >
           <DepositForm onSubmit={handleAddDeposit} isLoading={isLoading} />
+
+          {/* User avatar - debajo del formulario */}
+          <div className="ledger-user-menu">
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10",
+                },
+              }}
+            />
+          </div>
         </section>
 
         {/* Gutter central (solo desktop) */}

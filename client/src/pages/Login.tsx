@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from "react";
-import { useSignIn } from "@clerk/react/legacy";
 import { useClerk } from "@clerk/react";
+import { useSignIn } from "@clerk/react/legacy";
+import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";

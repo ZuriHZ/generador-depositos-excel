@@ -1,11 +1,17 @@
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit2,
+  FileDown,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
-import { Deposit, DepositFormData } from "@/hooks/useDepositsWithDB";
-import { Trash2, FileDown, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
-import { exportDepositsToExcel } from "@/lib/excelExporter";
 import { toast } from "sonner";
-import EditDepositModal from "@/components/EditDepositModal";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
+import EditDepositModal from "@/components/EditDepositModal";
 import { TotalStamp } from "@/components/TotalStamp";
+import { Deposit, DepositFormData } from "@/hooks/useDepositsWithDB";
+import { exportDepositsToExcel } from "@/lib/excelExporter";
 
 interface DepositTableProps {
   deposits: Deposit[];

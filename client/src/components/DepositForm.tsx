@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { AlertCircle, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { DepositFormData, ValidationErrors } from "@/hooks/useDepositsWithDB";
 
 interface DepositFormProps {
@@ -87,6 +87,7 @@ export default function DepositForm({
               strokeLinecap="round"
               strokeLinejoin="round"
               className="date-icon"
+              aria-hidden="true"
             >
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
