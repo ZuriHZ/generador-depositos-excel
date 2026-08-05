@@ -11,12 +11,12 @@
 @layer base {
   :root {
     /* === Brand Colors === */
-    --color-ink-blue: #0B2545;
-    --color-paper-cream: #F7F4EC;
-    --color-id-green: #1F7A5C;
-    --color-seal-amber: #C68A2E;
-    --color-steel-blue: #3E6D9C;
-    --color-ink-red: #A13D3D;
+    --color-ink-blue: #0b2545;
+    --color-paper-cream: #f7f4ec;
+    --color-id-green: #1f7a5c;
+    --color-seal-amber: #c68a2e;
+    --color-steel-blue: #3e6d9c;
+    --color-ink-red: #a13d3d;
 
     /* === Surface Palette (Material Design 3) === */
     --color-surface: #fcf9f1;
@@ -66,7 +66,7 @@
     --text-body-md: 1rem;
     --text-label-caps: 0.75rem;
     --text-numeric-data: 0.9375rem;
-    --text-numeric-input: 1.5rem;
+    --text-numeric-input: 1rem;
 
     /* === Font Weights === */
     --weight-regular: 400;
@@ -144,12 +144,12 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* === Modern Ledger Colors === */
-  --color-ink-blue: #0B2545;
-  --color-paper-cream: #F7F4EC;
-  --color-id-green: #1F7A5C;
-  --color-seal-amber: #C68A2E;
-  --color-steel-blue: #3E6D9C;
-  --color-ink-red: #A13D3D;
+  --color-ink-blue: #0b2545;
+  --color-paper-cream: #f7f4ec;
+  --color-id-green: #1f7a5c;
+  --color-seal-amber: #c68a2e;
+  --color-steel-blue: #3e6d9c;
+  --color-ink-red: #a13d3d;
 
   /* === Surface Colors === */
   --color-surface: #fcf9f1;
@@ -261,7 +261,6 @@
 }
 
 @layer components {
-
   /**
    * Custom container utility that centers content and adds responsive padding.
    *
@@ -341,7 +340,7 @@
     }
   }
 
-    /* ============================================
+  /* ============================================
      Login Page — Modern Ledger "Libro Contable"
      ============================================ */
 
@@ -372,14 +371,18 @@
     overflow: hidden;
     background-color: var(--color-ink-blue);
     background-image:
-      radial-gradient(ellipse 80% 60% at 20% 80%,
+      radial-gradient(
+        ellipse 80% 60% at 20% 80%,
         rgba(62, 109, 156, 0.25),
-        transparent),
-      repeating-linear-gradient(0deg,
+        transparent
+      ),
+      repeating-linear-gradient(
+        0deg,
         transparent,
         transparent 31px,
         rgba(255, 255, 255, 0.03) 31px,
-        rgba(255, 255, 255, 0.03) 32px);
+        rgba(255, 255, 255, 0.03) 32px
+      );
   }
 
   @media (min-width: 768px) {
@@ -398,12 +401,14 @@
     right: 0;
     width: 1px;
     height: 100%;
-    background: linear-gradient(to bottom,
-        transparent 0%,
-        rgba(198, 138, 46, 0.4) 30%,
-        rgba(198, 138, 46, 0.6) 50%,
-        rgba(198, 138, 46, 0.4) 70%,
-        transparent 100%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(198, 138, 46, 0.4) 30%,
+      rgba(198, 138, 46, 0.6) 50%,
+      rgba(198, 138, 46, 0.4) 70%,
+      transparent 100%
+    );
   }
 
   .login-brand-logo {
@@ -518,11 +523,13 @@
     align-items: center;
     padding: clamp(2rem, 5vw, 4rem);
     background-color: var(--color-paper-cream);
-    background-image: repeating-linear-gradient(0deg,
-        transparent,
-        transparent 31px,
-        rgba(0, 0, 0, 0.04) 31px,
-        rgba(0, 0, 0, 0.04) 32px);
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 31px,
+      rgba(0, 0, 0, 0.04) 31px,
+      rgba(0, 0, 0, 0.04) 32px
+    );
     position: relative;
   }
 
@@ -708,9 +715,11 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg,
-        var(--color-primary-container) 0%,
-        var(--color-ink-blue) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-primary-container) 0%,
+      var(--color-ink-blue) 100%
+    );
     opacity: 0;
     transition: opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
   }
@@ -833,7 +842,6 @@
 
   /* ---- Reduced Motion ---- */
   @media (prefers-reduced-motion: reduce) {
-
     .login-brand-logo,
     .login-brand-content,
     .login-brand-footer,
@@ -853,7 +861,7 @@
     }
   }
 
-/* ============================================
+  /* ============================================
      Unauth Home Page — matching login aesthetics
      ============================================ */
 
@@ -893,12 +901,16 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 80% 60% at 20% 80%,
+      radial-gradient(
+        ellipse 80% 60% at 20% 80%,
         oklch(35% 0.12 250 / 0.5),
-        transparent),
-      radial-gradient(ellipse 60% 50% at 80% 20%,
+        transparent
+      ),
+      radial-gradient(
+        ellipse 60% 50% at 80% 20%,
         oklch(40% 0.1 220 / 0.3),
-        transparent);
+        transparent
+      );
     pointer-events: none;
   }
 
@@ -909,12 +921,14 @@
     right: 0;
     width: 1px;
     height: 100%;
-    background: linear-gradient(to bottom,
-        transparent 0%,
-        oklch(55% 0.06 250 / 0.3) 30%,
-        oklch(65% 0.08 250 / 0.5) 50%,
-        oklch(55% 0.06 250 / 0.3) 70%,
-        transparent 100%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      oklch(55% 0.06 250 / 0.3) 30%,
+      oklch(65% 0.08 250 / 0.5) 50%,
+      oklch(55% 0.06 250 / 0.3) 70%,
+      transparent 100%
+    );
   }
 
   .unauth-brand-logo {
@@ -1126,7 +1140,6 @@
 
   /* ---- Reduced Motion (unauth) ---- */
   @media (prefers-reduced-motion: reduce) {
-
     .unauth-brand-logo,
     .unauth-brand-content,
     .unauth-brand-footer,
@@ -1370,7 +1383,6 @@
 
   /* ---- Initial Loader aesthetics ---- */
   @keyframes loaderPulse {
-
     0%,
     100% {
       opacity: 1;
@@ -1400,11 +1412,13 @@
     flex-direction: column;
     overflow: hidden;
     background-color: var(--color-paper-cream);
-    background-image: repeating-linear-gradient(0deg,
-        transparent,
-        transparent 31px,
-        rgba(0, 0, 0, 0.04) 31px,
-        rgba(0, 0, 0, 0.04) 32px);
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 31px,
+      rgba(0, 0, 0, 0.04) 31px,
+      rgba(0, 0, 0, 0.04) 32px
+    );
     font-family: var(--font-sans);
     position: relative;
   }
@@ -1486,12 +1500,14 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right,
-        rgba(0, 0, 0, 0.08),
-        rgba(0, 0, 0, 0.02) 40%,
-        transparent 50%,
-        rgba(0, 0, 0, 0.02) 60%,
-        rgba(0, 0, 0, 0.08));
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.08),
+      rgba(0, 0, 0, 0.02) 40%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.02) 60%,
+      rgba(0, 0, 0, 0.08)
+    );
     width: 24px;
     left: -12px;
   }
@@ -1503,11 +1519,13 @@
     bottom: 0;
     left: 0;
     width: 1px;
-    background: linear-gradient(to bottom,
-        transparent,
-        rgba(0, 0, 0, 0.12) 20%,
-        rgba(0, 0, 0, 0.12) 80%,
-        transparent);
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(0, 0, 0, 0.12) 20%,
+      rgba(0, 0, 0, 0.12) 80%,
+      transparent
+    );
   }
 
   /* Right page - History */
@@ -1664,7 +1682,8 @@
     cursor: pointer;
   }
 
-  .date-field-wrapper input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  .date-field-wrapper
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
     opacity: 0;
   }
 
@@ -1700,7 +1719,7 @@
 
   /* Inner border effect */
   .ledger-submit-btn::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 3px;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -1830,7 +1849,7 @@
 
 /* Color strip indicator (left side) */
 .ledger-table-row::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 4px;
@@ -2038,7 +2057,7 @@
 
 /* Double border effect */
 .total-stamp-inner::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 4px;
   border: 1px solid var(--color-seal-amber);
@@ -2140,7 +2159,7 @@
 }
 
 .ledger-export-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 3px;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -2193,7 +2212,6 @@
 
 /* Mobile: ocultar tabla, mostrar cards */
 @media (max-width: 1023px) {
-
   /* Ocultar tabla desktop */
   .refined-table-container {
     display: none;
@@ -2218,7 +2236,7 @@
 
 /* Card color indicator */
 .deposit-card::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 8px;

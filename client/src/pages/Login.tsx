@@ -238,7 +238,6 @@ export default function Login() {
 
           <Button
             type="button"
-            variant="outline"
             onClick={handleDemo}
             disabled={isSubmitting}
             className="login-demo-btn"

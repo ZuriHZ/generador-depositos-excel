@@ -111,7 +111,7 @@ export default function DepositForm({
           <input
             id="numeroCuenta"
             name="numeroCuenta"
-            type="text"
+            type="number"
             placeholder="Ej: 123456789"
             value={formData.numeroCuenta}
             onChange={handleInputChange}
@@ -210,7 +210,7 @@ export default function DepositForm({
           <input
             id="remito"
             name="remito"
-            type="text"
+            type="number"
             placeholder="Número de remito"
             value={formData.remito || ""}
             onChange={handleInputChange}
@@ -224,7 +224,7 @@ export default function DepositForm({
           <input
             id="numeroBolsa"
             name="numeroBolsa"
-            type="text"
+            type="number"
             placeholder="Número de bolsa"
             value={formData.numeroBolsa || ""}
             onChange={handleInputChange}
