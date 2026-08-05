@@ -2,19 +2,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { copyToClipboard } from "@/lib/copy-text";
-import { useClerk } from "@clerk/react";
+import { useClerk, useUser } from "@clerk/react";
 import { useSignIn } from "@clerk/react/legacy";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 
 export default function Login() {
   const { isLoaded, signIn } = useSignIn();
   const { setActive } = useClerk();
+  const { isSignedIn } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCopyingPassword, setIsCopyingPassword] = useState(false);
   const [isCopyingEmail, setIsCopyingEmail] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      window.location.href = "/";
+    }
+  }, [isLoaded, isSignedIn]);
 
   const handleCredentials = async (e: FormEvent) => {
     e.preventDefault();
