@@ -106,9 +106,13 @@ export async function upsertUser(user: {
     // Don't overwrite role on upsert — only set it on first creation
     // Admin role should be set manually via DB or a separate admin endpoint
 
+    // Upsert by email: if the user already exists with this email (e.g. the
+    // Clerk account was recreated and got a new clerkId), re-associate the
+    // existing DB row to the new clerkId instead of failing on the unique
+    // email constraint.
     await db.insert(users).values(values).onConflictDoUpdate({
-      target: users.clerkId,
-      set: updateSet,
+      target: users.email,
+      set: { ...updateSet, clerkId: user.clerkId },
     });
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
