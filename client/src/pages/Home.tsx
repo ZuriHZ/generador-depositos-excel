@@ -1,4 +1,4 @@
-import { UserButton } from "@clerk/react";
+import { UserButton, useUser } from "@clerk/react";
 import { DollarSign } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ import {
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"form" | "history">("form");
   const { user, isAuthenticated, loading } = useAuth();
+  const { isLoaded: clerkLoaded, isSignedIn } = useUser();
   const {
     deposits,
     addDeposit,
@@ -66,7 +67,7 @@ export default function Home() {
     );
   }
 
-  if (!isAuthenticated) {
+  if (clerkLoaded && !isSignedIn) {
     return (
       <div className="unauth-page">
         {/* ---- Brand Panel ---- */}
