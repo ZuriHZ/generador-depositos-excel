@@ -341,8 +341,8 @@
     }
   }
 
-  /* ============================================
-     Login Page — frontend-design skill aesthetics
+    /* ============================================
+     Login Page — Modern Ledger "Libro Contable"
      ============================================ */
 
   .login-page {
@@ -350,7 +350,7 @@
     grid-template-columns: 1fr;
     min-height: 100vh;
     min-height: 100dvh;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: var(--font-sans);
   }
 
   @media (min-width: 768px) {
@@ -365,12 +365,21 @@
     }
   }
 
-  /* ---- Brand Panel (left) ---- */
+  /* ---- Brand Panel (left) — tinta del libro ---- */
   .login-brand-panel {
     display: none;
     position: relative;
     overflow: hidden;
-    background: oklch(28% 0.08 250);
+    background-color: var(--color-ink-blue);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 80%,
+        rgba(62, 109, 156, 0.25),
+        transparent),
+      repeating-linear-gradient(0deg,
+        transparent,
+        transparent 31px,
+        rgba(255, 255, 255, 0.03) 31px,
+        rgba(255, 255, 255, 0.03) 32px);
   }
 
   @media (min-width: 768px) {
@@ -382,20 +391,6 @@
     }
   }
 
-  .login-brand-panel::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 20% 80%,
-        oklch(35% 0.12 250 / 0.5),
-        transparent),
-      radial-gradient(ellipse 60% 50% at 80% 20%,
-        oklch(40% 0.1 220 / 0.3),
-        transparent);
-    pointer-events: none;
-  }
-
   .login-brand-panel::after {
     content: "";
     position: absolute;
@@ -405,9 +400,9 @@
     height: 100%;
     background: linear-gradient(to bottom,
         transparent 0%,
-        oklch(55% 0.06 250 / 0.3) 30%,
-        oklch(65% 0.08 250 / 0.5) 50%,
-        oklch(55% 0.06 250 / 0.3) 70%,
+        rgba(198, 138, 46, 0.4) 30%,
+        rgba(198, 138, 46, 0.6) 50%,
+        rgba(198, 138, 46, 0.4) 70%,
         transparent 100%);
   }
 
@@ -426,22 +421,24 @@
   .login-brand-logo-icon {
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 0.5rem;
-    background: oklch(65% 0.12 250);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(198, 138, 46, 0.6);
+    background: rgba(198, 138, 46, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: oklch(95% 0.01 250);
+    color: var(--color-seal-amber);
+    font-family: var(--font-serif);
     font-weight: 700;
     font-size: 1.125rem;
-    letter-spacing: -0.02em;
   }
 
   .login-brand-logo-text {
-    color: oklch(88% 0.03 250);
-    font-size: 0.9375rem;
+    color: var(--color-paper-cream);
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: var(--tracking-label-caps);
     text-transform: uppercase;
   }
 
@@ -452,80 +449,100 @@
   }
 
   .login-brand-headline {
-    font-family: "Fraunces", serif;
+    font-family: var(--font-serif);
     font-size: clamp(1.75rem, 3.5vw, 2.75rem);
     font-weight: 400;
     line-height: 1.2;
-    color: oklch(92% 0.02 250);
-    margin: 0 0 1.5rem 0;
+    color: var(--color-paper-cream);
+    margin: 0 0 1.25rem 0;
     max-width: 22ch;
     letter-spacing: -0.01em;
   }
 
   .login-brand-headline em {
     font-style: italic;
-    color: oklch(72% 0.1 250);
+    color: var(--color-seal-amber);
   }
 
   .login-brand-description {
     font-size: 0.9375rem;
     line-height: 1.7;
-    color: oklch(68% 0.04 250);
+    color: rgba(247, 244, 236, 0.65);
     max-width: 38ch;
     margin: 0;
+  }
+
+  /* ---- Asiento contable decorativo ---- */
+  .login-brand-ledger {
+    margin-top: 3rem;
+    max-width: 320px;
+    position: relative;
+    z-index: 1;
+    animation: loginFadeSlideUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+
+  .login-brand-ledger-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid rgba(247, 244, 236, 0.1);
+    font-size: 0.8125rem;
+  }
+
+  .login-brand-ledger-row span:first-child {
+    color: rgba(247, 244, 236, 0.55);
+    font-family: var(--font-mono);
+    letter-spacing: 0.03em;
+  }
+
+  .login-brand-ledger-row span:last-child {
+    color: var(--color-seal-amber);
+    font-family: var(--font-mono);
+    font-weight: 500;
   }
 
   .login-brand-footer {
     position: relative;
     z-index: 1;
-    color: oklch(50% 0.03 250);
+    color: rgba(247, 244, 236, 0.4);
     font-size: 0.8125rem;
-    animation: loginFadeSlideUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+    animation: loginFadeSlideUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 300ms both;
   }
 
-  /* ---- Form Panel (right) ---- */
+  /* ---- Form Panel (right) — hoja del libro ---- */
   .login-form-panel {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: clamp(2rem, 5vw, 4rem);
-    background: oklch(98% 0.005 250);
+    background-color: var(--color-paper-cream);
+    background-image: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 31px,
+        rgba(0, 0, 0, 0.04) 31px,
+        rgba(0, 0, 0, 0.04) 32px);
     position: relative;
-  }
-
-  .login-form-panel::before {
-    content: "";
-    position: absolute;
-    top: 2rem;
-    left: clamp(2rem, 5vw, 4rem);
-    width: 1px;
-    height: 3rem;
-    background: oklch(85% 0.02 250);
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    .login-form-panel::before {
-      display: block;
-    }
   }
 
   .login-form-wrapper {
     width: 100%;
-    max-width: 380px;
-  }
-
-  .login-form-header {
-    margin-bottom: 2.5rem;
-    animation: loginFadeSlideUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
+    max-width: 400px;
+    background: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--radius-sm);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 12px 32px -12px rgba(11, 37, 69, 0.18);
+    padding: clamp(2rem, 4vw, 2.75rem);
   }
 
   .login-mobile-brand {
     display: flex;
     align-items: center;
     gap: 0.625rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   @media (min-width: 768px) {
@@ -537,36 +554,44 @@
   .login-mobile-brand-icon {
     width: 2rem;
     height: 2rem;
-    border-radius: 0.375rem;
-    background: oklch(45% 0.12 250);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(198, 138, 46, 0.6);
+    background: rgba(198, 138, 46, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: oklch(95% 0.01 250);
+    color: var(--color-seal-amber);
+    font-family: var(--font-serif);
     font-weight: 700;
     font-size: 0.875rem;
   }
 
   .login-mobile-brand-text {
+    font-family: var(--font-serif);
     font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: var(--tracking-label-caps);
     text-transform: uppercase;
-    color: oklch(40% 0.04 250);
+    color: var(--color-ink-blue);
+  }
+
+  .login-form-header {
+    margin-bottom: 2rem;
+    animation: loginFadeSlideUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
   }
 
   .login-form-greeting {
-    font-family: "Fraunces", serif;
-    font-size: clamp(1.5rem, 2.5vw, 1.875rem);
-    font-weight: 500;
-    color: oklch(20% 0.02 250);
+    font-family: var(--font-serif);
+    font-size: var(--text-headline-md);
+    font-weight: var(--weight-bold);
+    color: var(--color-ink-blue);
     margin: 0 0 0.5rem 0;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-headline);
   }
 
   .login-form-subtitle {
     font-size: 0.9375rem;
-    color: oklch(55% 0.02 250);
+    color: var(--color-on-surface-variant);
     margin: 0;
     line-height: 1.5;
   }
@@ -582,12 +607,13 @@
 
   .login-field-label {
     display: block;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: oklch(35% 0.02 250);
+    font-size: var(--text-label-caps);
+    font-weight: var(--weight-semibold);
+    color: var(--color-on-surface-variant);
     margin-bottom: 0.5rem;
-    letter-spacing: 0.01em;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    letter-spacing: var(--tracking-label-caps);
+    text-transform: uppercase;
+    font-family: var(--font-sans);
   }
 
   .login-field-input-wrap {
@@ -599,11 +625,11 @@
     height: 3rem;
     padding: 0 1rem;
     font-size: 0.9375rem;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    color: oklch(20% 0.02 250);
-    background: oklch(96% 0.005 250);
-    border: 1.5px solid oklch(88% 0.015 250);
-    border-radius: 0.625rem;
+    font-family: var(--font-sans);
+    color: var(--color-on-surface);
+    background: var(--color-surface-container-low);
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--radius-sm);
     outline: none;
     transition:
       border-color 200ms cubic-bezier(0.25, 1, 0.5, 1),
@@ -612,17 +638,17 @@
   }
 
   .login-field-input::placeholder {
-    color: oklch(65% 0.02 250);
+    color: var(--color-outline);
   }
 
   .login-field-input:hover {
-    border-color: oklch(78% 0.04 250);
+    border-color: var(--color-steel-blue);
   }
 
   .login-field-input:focus {
-    border-color: oklch(55% 0.12 250);
-    box-shadow: 0 0 0 3px oklch(55% 0.12 250 / 0.1);
-    background: oklch(100% 0 0);
+    border-color: var(--color-steel-blue);
+    box-shadow: 0 0 0 3px rgba(62, 109, 156, 0.12);
+    background: var(--color-surface-container-lowest);
   }
 
   .login-field-input:disabled {
@@ -636,7 +662,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background: oklch(55% 0.12 250);
+    background: var(--color-steel-blue);
     border-radius: 1px;
     transition:
       width 300ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -663,13 +689,13 @@
     justify-content: center;
     gap: 0.5rem;
     font-size: 0.9375rem;
-    font-weight: 600;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: var(--weight-semibold);
+    font-family: var(--font-sans);
     letter-spacing: 0.01em;
-    color: oklch(97% 0.01 250);
-    background: oklch(38% 0.1 250);
+    color: var(--color-on-primary);
+    background: var(--color-ink-blue);
     border: none;
-    border-radius: 0.625rem;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -683,8 +709,8 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg,
-        oklch(42% 0.12 250) 0%,
-        oklch(35% 0.1 240) 100%);
+        var(--color-primary-container) 0%,
+        var(--color-ink-blue) 100%);
     opacity: 0;
     transition: opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
   }
@@ -708,12 +734,67 @@
     z-index: 1;
   }
 
-  /* ---- Footer ---- */
-  .login-form-footer {
-    margin-top: 2.5rem;
+  /* ---- Demo Button ---- */
+  .login-demo-sep {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--color-outline);
+    font-size: 0.8125rem;
+  }
+
+  .login-demo-sep::before,
+  .login-demo-sep::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-outline-variant);
+  }
+
+  .login-demo-btn {
+    width: 100%;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: var(--weight-semibold);
+    font-family: var(--font-sans);
+    color: var(--color-id-green);
+    background: transparent;
+    border: 1.5px solid rgba(31, 122, 92, 0.45);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      background 200ms cubic-bezier(0.25, 1, 0.5, 1),
+      border-color 200ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .login-demo-btn:hover:not(:disabled) {
+    background: rgba(31, 122, 92, 0.08);
+    border-color: var(--color-id-green);
+  }
+
+  .login-demo-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .login-demo-hint {
+    margin: 0.75rem 0 0;
     text-align: center;
     font-size: 0.8125rem;
-    color: oklch(60% 0.02 250);
+    color: var(--color-on-surface-variant);
+  }
+
+  /* ---- Footer ---- */
+  .login-form-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--color-on-surface-variant);
     animation: loginFadeSlideUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both;
   }
 
@@ -721,7 +802,7 @@
     display: block;
     width: 2rem;
     height: 1px;
-    background: oklch(88% 0.015 250);
+    background: var(--color-outline-variant);
     margin: 1.5rem auto 1rem;
   }
 
@@ -766,12 +847,13 @@
 
     .login-field-input,
     .login-submit-btn,
-    .login-field-focus-line {
+    .login-field-focus-line,
+    .login-demo-btn {
       transition-duration: 0.01ms;
     }
   }
 
-  /* ============================================
+/* ============================================
      Unauth Home Page — matching login aesthetics
      ============================================ */
 

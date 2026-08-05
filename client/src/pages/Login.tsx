@@ -124,6 +124,21 @@ export default function Login() {
             Genera archivos Excel listos para el banco en segundos. Sin errores
             manuales, sin demoras.
           </p>
+
+          <div className="login-brand-ledger" aria-hidden="true">
+            <div className="login-brand-ledger-row">
+              <span>DEP. 001</span>
+              <span>$ 1.250,00</span>
+            </div>
+            <div className="login-brand-ledger-row">
+              <span>DEP. 002</span>
+              <span>$ 3.400,00</span>
+            </div>
+            <div className="login-brand-ledger-row">
+              <span>DEP. 003</span>
+              <span>$ 2.800,00</span>
+            </div>
+          </div>
         </div>
 
         <div className="login-brand-footer">
