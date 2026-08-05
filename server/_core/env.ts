@@ -5,6 +5,8 @@ export const ENV = {
   forgeApiUrl: process.env.FORGE_API_URL ?? "",
   forgeApiKey: process.env.FORGE_API_KEY ?? "",
   allowedOrigins: process.env.ALLOWED_ORIGINS ?? "",
+  allowedUserEmails:
+    process.env.ALLOWED_USER_EMAILS ?? "admin@example.com,demo@example.com",
   // Clerk
   clerkSecretKey: process.env.CLERK_SECRET_KEY ?? "",
   clerkPublishableKey: process.env.VITE_CLERK_PUBLISHABLE_KEY ?? "",

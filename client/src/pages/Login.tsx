@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import { copyToClipboard } from "@/lib/copy-text";
 import { useClerk, useUser } from "@clerk/react";
 import { useSignIn } from "@clerk/react/legacy";
 import { type FormEvent, useEffect, useState } from "react";
+
+// Credenciales de la cuenta demo (creada en Clerk solo para que
+// reclutadores prueben la app). La cuenta admin real no se expone.
+const DEMO_EMAIL = "demo@example.com";
+const DEMO_PASSWORD = "DemoAcceso2026!";
 
 export default function Login() {
   const { isLoaded, signIn } = useSignIn();
@@ -14,8 +18,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCopyingPassword, setIsCopyingPassword] = useState(false);
-  const [isCopyingEmail, setIsCopyingEmail] = useState(false);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -23,16 +25,15 @@ export default function Login() {
     }
   }, [isLoaded, isSignedIn]);
 
-  const handleCredentials = async (e: FormEvent) => {
-    e.preventDefault();
+  const doLogin = async (identifier: string, pwd: string) => {
     if (!isLoaded || isSubmitting || !signIn) return;
     setIsSubmitting(true);
     setFormError(null);
 
     try {
       const result = await signIn.create({
-        identifier: email,
-        password,
+        identifier,
+        password: pwd,
       });
 
       if (result.status === "complete") {
@@ -41,7 +42,7 @@ export default function Login() {
       } else if (result.status === "needs_first_factor") {
         const attempt = await signIn.attemptFirstFactor({
           strategy: "password",
-          password,
+          password: pwd,
         });
         if (attempt.status === "complete") {
           await setActive({ session: attempt.createdSessionId });
@@ -78,6 +79,17 @@ export default function Login() {
     }
   };
 
+  const handleCredentials = (e: FormEvent) => {
+    e.preventDefault();
+    doLogin(email, password);
+  };
+
+  const handleDemo = () => {
+    setEmail(DEMO_EMAIL);
+    setPassword(DEMO_PASSWORD);
+    doLogin(DEMO_EMAIL, DEMO_PASSWORD);
+  };
+
   if (!isLoaded) {
     return (
       <div className="login-page">
@@ -92,15 +104,6 @@ export default function Login() {
       </div>
     );
   }
-
-  const textToCopyPassword = "52qq82j9";
-  const textToCopyEmail = "admin@example.com";
-
-  const handleCopyPassword = () =>
-    copyToClipboard(textToCopyPassword, setIsCopyingPassword);
-
-  const handleCopyEmail = () =>
-    copyToClipboard(textToCopyEmail, setIsCopyingEmail);
 
   return (
     <div className="login-page">
@@ -149,21 +152,6 @@ export default function Login() {
                 Email
               </label>
               <div className="login-field-input-wrap">
-                <div
-                  onCopy={() =>
-                    navigator.clipboard.writeText("admin@example.com")
-                  }
-                  className="gap-2 flex items-center"
-                >
-                  admin@example.com
-                  <button
-                    type="button"
-                    className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 transition"
-                    onClick={handleCopyEmail}
-                  >
-                    {isCopyingEmail ? "copiado" : "copiar"}
-                  </button>
-                </div>
                 <Input
                   id="email"
                   type="email"
@@ -187,19 +175,6 @@ export default function Login() {
                 Contraseña
               </label>
               <div className="login-field-input-wrap">
-                <div className="flex items-center gap-2">
-                  <code className="rounded bg-gray-100 px-2 py-1 font-mono">
-                    {textToCopyPassword}
-                  </code>
-
-                  <button
-                    type="button"
-                    onClick={handleCopyPassword}
-                    className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 transition"
-                  >
-                    {isCopyingPassword ? "copiado" : "copiar"}
-                  </button>
-                </div>
                 <Input
                   id="password"
                   type="password"
@@ -241,6 +216,30 @@ export default function Login() {
               </Button>
             </div>
           </form>
+
+          <div className="login-demo-sep">
+            <span>o</span>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleDemo}
+            disabled={isSubmitting}
+            className="login-demo-btn"
+          >
+            {isSubmitting ? (
+              <>
+                <Spinner className="size-4" />
+                <span>Entrando como demo...</span>
+              </>
+            ) : (
+              <span>Probar como demo</span>
+            )}
+          </Button>
+          <p className="login-demo-hint">
+            Accede sin registrarte para explorar la app
+          </p>
 
           <footer className="login-form-footer">
             <span className="login-form-footer-sep" />
