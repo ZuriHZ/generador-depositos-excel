@@ -1,7 +1,10 @@
 import "dotenv/config";
-import express from "express";
+import express, { type Request, type Response, type NextFunction } from "express";
 import { createServer } from "http";
 import net from "net";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import cors from "cors";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -31,17 +34,86 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 const app = express();
 const server = createServer(app);
 
-// Configure body parser with larger size limit for file uploads
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+// ─── Security Headers ───────────────────────────────────────────────
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://*.clerk.accounts.dev", "https://*.clerk.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "blob:", "https://*.clerk.accounts.dev", "https://*.clerk.com"],
+      workerSrc: ["'self'", "blob:"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 
-// Clerk auth middleware — attaches auth info to every request
+// Permite el evento unload (lo usa Clerk) y bloquea features innecesarias
+app.use((_req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    "unload=(self), camera=(), microphone=(), geolocation=()"
+  );
+  next();
+});
+
+// ─── CORS ───────────────────────────────────────────────────────────
+const allowedOrigins = (
+  ENV.allowedOrigins ||
+  "http://localhost:3000,http://localhost:3002,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000,http://127.0.0.1:3002,http://127.0.0.1:5173"
+)
+  .split(",")
+  .map(o => o.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+// ─── Rate Limiting ──────────────────────────────────────────────────
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, try again later." },
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, try again in 15 minutes." },
+});
+
+app.use(generalLimiter);
+
+// ─── Body Parser (reducido de 50MB a 2MB) ───────────────────────────
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ limit: "2mb", extended: true }));
+
+// ─── Clerk auth middleware ───────────────────────────────────────────
 app.use(clerkMiddleware({
   publishableKey: ENV.clerkPublishableKey,
   secretKey: ENV.clerkSecretKey,
 }));
 
-// tRPC API
+// ─── Rate limit en auth endpoints ───────────────────────────────────
+app.use("/api/trpc/auth", authLimiter);
+
+// ─── tRPC API ───────────────────────────────────────────────────────
 app.use(
   "/api/trpc",
   createExpressMiddleware({
@@ -49,6 +121,22 @@ app.use(
     createContext,
   })
 );
+
+// ─── Global Error Handler ───────────────────────────────────────────
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error("[Error]", err.message);
+
+  if (err.message === "Not allowed by CORS") {
+    res.status(403).json({ error: "Origin not allowed" });
+    return;
+  }
+
+  res.status(500).json({
+    error: ENV.isProduction
+      ? "Internal server error"
+      : err.message,
+  });
+});
 
 async function startServer() {
   console.log(`Starting server in ${process.env.NODE_ENV} mode...`);

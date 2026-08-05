@@ -1,21 +1,20 @@
-import { useClerk } from "@clerk/react";
-import { useSignIn } from "@clerk/react/legacy";
-import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-
-type Step = "credentials" | "verify";
+import { copyToClipboard } from "@/lib/copy-text";
+import { useClerk } from "@clerk/react";
+import { useSignIn } from "@clerk/react/legacy";
+import { type FormEvent, useState } from "react";
 
 export default function Login() {
   const { isLoaded, signIn } = useSignIn();
   const { setActive } = useClerk();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [step, setStep] = useState<Step>("credentials");
+  const [isCopyingPassword, setIsCopyingPassword] = useState(false);
+  const [isCopyingEmail, setIsCopyingEmail] = useState(false);
 
   const handleCredentials = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,14 +40,20 @@ export default function Login() {
           await setActive({ session: attempt.createdSessionId });
           window.location.href = "/";
         } else if (attempt.status === "needs_client_trust") {
-          await sendVerificationCode();
+          setFormError(
+            "Se requiere verificacion adicional. Contacta al administrador para desactivar la verificacion por email en Clerk."
+          );
         } else {
           setFormError("Verificacion de contrasena fallida.");
         }
       } else if (result.status === "needs_client_trust") {
-        await sendVerificationCode();
+        setFormError(
+          "Se requiere verificacion adicional. Contacta al administrador para desactivar la verificacion por email en Clerk."
+        );
       } else if (result.status === "needs_second_factor") {
-        setFormError("Se requiere verificacion en dos pasos. Contacta al administrador.");
+        setFormError(
+          "Se requiere verificacion en dos pasos. Contacta al administrador."
+        );
       } else {
         setFormError(
           `Estado inesperado: ${result.status}. Contacta al administrador.`
@@ -66,64 +71,29 @@ export default function Login() {
     }
   };
 
-  const sendVerificationCode = async () => {
-    if (!signIn) return;
-    try {
-      const emailCodeFactor = signIn.supportedSecondFactors?.find(
-        (f: any) => f.strategy === "email_code"
-      );
-      if (emailCodeFactor) {
-        await signIn.prepareSecondFactor({ strategy: "email_code" });
-        setStep("verify");
-        setFormError(null);
-      } else {
-        setFormError("La verificacion por email no esta disponible.");
-      }
-    } catch (err: any) {
-      setFormError(
-        err?.errors?.[0]?.message ?? "No se pudo enviar el codigo de verificacion."
-      );
-    }
-    setIsSubmitting(false);
-  };
-
-  const handleVerify = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!signIn || isSubmitting || !code) return;
-    setIsSubmitting(true);
-    setFormError(null);
-
-    try {
-      const attempt = await signIn.attemptSecondFactor({
-        strategy: "email_code",
-        code,
-      });
-      if (attempt.status === "complete") {
-        await setActive({ session: attempt.createdSessionId });
-        window.location.href = "/";
-      } else {
-        setFormError("Codigo de verificacion incorrecto.");
-      }
-    } catch (err: any) {
-      setFormError(
-        err?.errors?.[0]?.message ?? "Codigo de verificacion invalido."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   if (!isLoaded) {
     return (
       <div className="login-page">
         <div className="login-form-panel" style={{ flex: 1 }}>
-          <div className="login-form-wrapper" style={{ alignItems: "center", justifyContent: "center" }}>
+          <div
+            className="login-form-wrapper"
+            style={{ alignItems: "center", justifyContent: "center" }}
+          >
             <Spinner className="size-8" />
           </div>
         </div>
       </div>
     );
   }
+
+  const textToCopyPassword = "52qq82j9";
+  const textToCopyEmail = "admin@example.com";
+
+  const handleCopyPassword = () =>
+    copyToClipboard(textToCopyPassword, setIsCopyingPassword);
+
+  const handleCopyEmail = () =>
+    copyToClipboard(textToCopyEmail, setIsCopyingEmail);
 
   return (
     <div className="login-page">
@@ -159,131 +129,111 @@ export default function Login() {
             <span className="login-mobile-brand-text">Depositos</span>
           </div>
 
-          {step === "credentials" ? (
-            <>
-              <div className="login-form-header">
-                <h2 className="login-form-greeting">Iniciar sesion</h2>
-                <p className="login-form-subtitle">
-                  Accede al generador de depositos
-                </p>
-              </div>
+          <div className="login-form-header">
+            <h2 className="login-form-greeting">Iniciar sesion</h2>
+            <p className="login-form-subtitle">
+              Accede al generador de depositos
+            </p>
+          </div>
 
-              <form onSubmit={handleCredentials} className="login-form">
-                <div className="login-field-group">
-                  <label htmlFor="email" className="login-field-label">Email</label>
-                  <div className="login-field-input-wrap">
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@example.com"
-                      required
-                      autoComplete="email"
-                      disabled={isSubmitting}
-                      className="login-field-input"
-                    />
-                    <span className="login-field-focus-line" data-focused={email ? "true" : undefined} />
-                  </div>
-                </div>
-
-                <div className="login-field-group">
-                  <label htmlFor="password" className="login-field-label">Contrasena</label>
-                  <div className="login-field-input-wrap">
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="********"
-                      required
-                      autoComplete="current-password"
-                      disabled={isSubmitting}
-                      className="login-field-input"
-                    />
-                    <span className="login-field-focus-line" data-focused={password ? "true" : undefined} />
-                  </div>
-                </div>
-
-                {formError && (
-                  <div className="rounded-md bg-destructive/10 border border-destructive/20 px-3 py-2 text-destructive text-sm">
-                    {formError}
-                  </div>
-                )}
-
-                <div className="login-submit-wrap">
-                  <Button type="submit" disabled={isSubmitting || !email || !password} className="login-submit-btn">
-                    {isSubmitting ? (
-                      <>
-                        <Spinner className="size-4" />
-                        <span>Ingresando...</span>
-                      </>
-                    ) : (
-                      <span>Ingresar</span>
-                    )}
-                  </Button>
-                </div>
-              </form>
-            </>
-          ) : (
-            <>
-              <div className="login-form-header">
-                <h2 className="login-form-greeting">Verificar identidad</h2>
-                <p className="login-form-subtitle">
-                  Ingresa el codigo enviado a <strong>{email}</strong>
-                </p>
-              </div>
-
-              <form onSubmit={handleVerify} className="login-form">
-                <div className="login-field-group">
-                  <label htmlFor="code" className="login-field-label">Codigo de verificacion</label>
-                  <div className="login-field-input-wrap">
-                    <Input
-                      id="code"
-                      type="text"
-                      value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                      placeholder="000000"
-                      required
-                      autoComplete="one-time-code"
-                      disabled={isSubmitting}
-                      className="login-field-input"
-                    />
-                    <span className="login-field-focus-line" data-focused={code ? "true" : undefined} />
-                  </div>
-                </div>
-
-                {formError && (
-                  <div className="rounded-md bg-destructive/10 border border-destructive/20 px-3 py-2 text-destructive text-sm">
-                    {formError}
-                  </div>
-                )}
-
-                <div className="login-submit-wrap">
-                  <Button type="submit" disabled={isSubmitting || !code} className="login-submit-btn">
-                    {isSubmitting ? (
-                      <>
-                        <Spinner className="size-4" />
-                        <span>Verificando...</span>
-                      </>
-                    ) : (
-                      <span>Verificar</span>
-                    )}
-                  </Button>
-                </div>
-
-                <p style={{ textAlign: "center", marginTop: 12 }}>
+          <form onSubmit={handleCredentials} className="login-form">
+            <div className="login-field-group">
+              <label htmlFor="email" className="login-field-label">
+                Email
+              </label>
+              <div className="login-field-input-wrap">
+                <div
+                  onCopy={() =>
+                    navigator.clipboard.writeText("admin@example.com")
+                  }
+                  className="gap-2 flex items-center"
+                >
+                  admin@example.com
                   <button
                     type="button"
-                    onClick={() => { setStep("credentials"); setFormError(null); }}
-                    style={{ color: "var(--primary)", background: "none", border: "none", cursor: "pointer", fontSize: "0.875rem" }}
+                    className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 transition"
+                    onClick={handleCopyEmail}
                   >
-                    Volver al inicio de sesion
+                    {isCopyingEmail ? "copiado" : "copiar"}
                   </button>
-                </p>
-              </form>
-            </>
-          )}
+                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Escribe tu correo electronico"
+                  required
+                  autoComplete="email"
+                  disabled={isSubmitting}
+                  className="login-field-input"
+                />
+                <span
+                  className="login-field-focus-line"
+                  data-focused={email ? "true" : undefined}
+                />
+              </div>
+            </div>
+
+            <div className="login-field-group">
+              <label htmlFor="password" className="login-field-label">
+                Contraseña
+              </label>
+              <div className="login-field-input-wrap">
+                <div className="flex items-center gap-2">
+                  <code className="rounded bg-gray-100 px-2 py-1 font-mono">
+                    {textToCopyPassword}
+                  </code>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyPassword}
+                    className="rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 transition"
+                  >
+                    {isCopyingPassword ? "copiado" : "copiar"}
+                  </button>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Escribe tu contrasena"
+                  required
+                  autoComplete="current-password"
+                  disabled={isSubmitting}
+                  className="login-field-input"
+                />
+                <span
+                  className="login-field-focus-line"
+                  data-focused={password ? "true" : undefined}
+                />
+              </div>
+            </div>
+
+            {formError && (
+              <div className="rounded-md bg-destructive/10 border border-destructive/20 px-3 py-2 text-destructive text-sm">
+                {formError}
+              </div>
+            )}
+
+            <div className="login-submit-wrap">
+              <Button
+                type="submit"
+                disabled={isSubmitting || !email || !password}
+                className="login-submit-btn"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner className="size-4" />
+                    <span>Ingresando...</span>
+                  </>
+                ) : (
+                  <span>Ingresar</span>
+                )}
+              </Button>
+            </div>
+          </form>
 
           <footer className="login-form-footer">
             <span className="login-form-footer-sep" />

@@ -131,7 +131,7 @@ export const useDepositsWithDB = () => {
           numeroCuenta: data.numeroCuenta.trim(),
           nombreCliente: data.nombreCliente.trim(),
           monto: data.monto,
-          tipoDeposito: data.tipoDeposito,
+          tipoDeposito: data.tipoDeposito as "efectivo" | "cheque" | "transferencia",
           remito: data.remito?.trim(),
           numeroBolsa: data.numeroBolsa?.trim(),
         });
@@ -203,7 +203,7 @@ export const useDepositsWithDB = () => {
           numeroCuenta: data.numeroCuenta.trim(),
           nombreCliente: data.nombreCliente.trim(),
           monto: data.monto,
-          tipoDeposito: data.tipoDeposito,
+          tipoDeposito: data.tipoDeposito as "efectivo" | "cheque" | "transferencia",
           remito: data.remito?.trim(),
           numeroBolsa: data.numeroBolsa?.trim(),
         });

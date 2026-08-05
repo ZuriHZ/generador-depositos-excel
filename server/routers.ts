@@ -26,13 +26,15 @@ export const appRouter = router({
     create: protectedProcedure
       .input(
         z.object({
-          fecha: z.string(),
-          numeroCuenta: z.string(),
-          nombreCliente: z.string(),
-          monto: z.string(),
-          tipoDeposito: z.string(),
-          remito: z.string().optional(),
-          numeroBolsa: z.string().optional(),
+          fecha: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha invalida (YYYY-MM-DD)"),
+          numeroCuenta: z.string().min(5, "Numero de cuenta muy corto").max(30),
+          nombreCliente: z.string().min(2, "Nombre muy corto").max(100),
+          monto: z.string().regex(/^\d+(\.\d{1,2})?$/, "Monto invalido"),
+          tipoDeposito: z.enum(["efectivo", "cheque", "transferencia"], {
+            message: "Tipo de deposito invalido",
+          }),
+          remito: z.string().max(50).optional(),
+          numeroBolsa: z.string().max(50).optional(),
         })
       )
       .mutation(({ ctx, input }) => {
@@ -50,14 +52,14 @@ export const appRouter = router({
     update: protectedProcedure
       .input(
         z.object({
-          id: z.number(),
-          fecha: z.string().optional(),
-          numeroCuenta: z.string().optional(),
-          nombreCliente: z.string().optional(),
-          monto: z.string().optional(),
-          tipoDeposito: z.string().optional(),
-          remito: z.string().optional(),
-          numeroBolsa: z.string().optional(),
+          id: z.number().positive(),
+          fecha: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+          numeroCuenta: z.string().min(5).max(30).optional(),
+          nombreCliente: z.string().min(2).max(100).optional(),
+          monto: z.string().regex(/^\d+(\.\d{1,2})?$/).optional(),
+          tipoDeposito: z.enum(["efectivo", "cheque", "transferencia"]).optional(),
+          remito: z.string().max(50).optional(),
+          numeroBolsa: z.string().max(50).optional(),
         })
       )
       .mutation(({ input }) => {
@@ -74,7 +76,7 @@ export const appRouter = router({
         return updateDeposit(id, updateData);
       }),
     delete: protectedProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number().positive() }))
       .mutation(({ input }) => deleteDeposit(input.id)),
   }),
 });

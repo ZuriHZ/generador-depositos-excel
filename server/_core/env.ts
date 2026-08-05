@@ -4,6 +4,7 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.FORGE_API_URL ?? "",
   forgeApiKey: process.env.FORGE_API_KEY ?? "",
+  allowedOrigins: process.env.ALLOWED_ORIGINS ?? "",
   // Clerk
   clerkSecretKey: process.env.CLERK_SECRET_KEY ?? "",
   clerkPublishableKey: process.env.VITE_CLERK_PUBLISHABLE_KEY ?? "",

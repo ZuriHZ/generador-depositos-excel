@@ -9,6 +9,7 @@ import App from "./App";
 import "./index.css";
 
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const API_URL = import.meta.env.VITE_API_URL ?? "/api/trpc";
 
 if (!CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY environment variable");
@@ -47,7 +48,7 @@ queryClient.getMutationCache().subscribe(event => {
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "/api/trpc",
+      url: API_URL,
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {
