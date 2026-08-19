@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express, { type Request, type Response, type NextFunction } from "express";
 import { createServer } from "http";
-import net from "net";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
@@ -11,25 +10,6 @@ import { createContext } from "./context";
 import { clerkMiddleware } from "./clerk";
 import { serveStatic, setupVite } from "./vite";
 import { ENV } from "./env";
-
-function isPortAvailable(port: number): Promise<boolean> {
-  return new Promise(resolve => {
-    const server = net.createServer();
-    server.listen(port, () => {
-      server.close(() => resolve(true));
-    });
-    server.on("error", () => resolve(false));
-  });
-}
-
-async function findAvailablePort(startPort: number = 3000): Promise<number> {
-  for (let port = startPort; port < startPort + 20; port++) {
-    if (await isPortAvailable(port)) {
-      return port;
-    }
-  }
-  throw new Error(`No available port found starting from ${startPort}`);
-}
 
 const app = express();
 const server = createServer(app);
@@ -62,7 +42,7 @@ app.use((_req, res, next) => {
 // ─── CORS ───────────────────────────────────────────────────────────
 const allowedOrigins = (
   ENV.allowedOrigins ||
-  "http://localhost:3000,http://localhost:3002,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000,http://127.0.0.1:3002,http://127.0.0.1:5173,https://generador-depositos-excel.onrender.com"
+  "http://localhost:3000,http://localhost:3002,http://localhost:5173,http://localhost:4173,http://127.0.0.1:3000,http://127.0.0.1:3002,http://127.0.0.1:5173,https://generador-depositos-excel.onrender.com,https://generador-depositos-excel-qt48.onrender.com"
 )
   .split(",")
   .map(o => o.trim())
@@ -122,6 +102,13 @@ app.use(
   })
 );
 
+// ─── Static files (production) ──────────────────────────────────────
+// IMPORTANTE: debe ir ANTES del error handler para que los archivos
+// estáticos (CSS, JS, imágenes) se sirvan con el Content-Type correcto.
+if (process.env.NODE_ENV === "production") {
+  serveStatic(app);
+}
+
 // ─── Global Error Handler ───────────────────────────────────────────
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error("[Error]", err.message);
@@ -141,21 +128,14 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 async function startServer() {
   console.log(`Starting server in ${process.env.NODE_ENV} mode...`);
 
-  // development mode uses Vite, production mode uses static files
+  // development mode uses Vite dev server
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
-  } else {
-    serveStatic(app);
   }
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  const port = parseInt(process.env.PORT || "3000");
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
-  }
-
-  server.listen(port, () => {
+  server.listen(port, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${port}/`);
   });
 }
